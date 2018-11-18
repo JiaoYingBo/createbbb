@@ -19,6 +19,8 @@
 		0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D105219FECBF00DF82F0 /* Tab2ViewController.m */; };
 		0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */; };
 		0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */; };
+		0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */; };
+		0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */; };
 		3791A363C2A14592440D0E1A /* libPods-GraduateProj.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C066276DCA02A7AF67F821 /* libPods-GraduateProj.a */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +48,10 @@
 		0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3ViewController.m; sourceTree = "<group>"; };
 		0E47D10E219FECBF00DF82F0 /* Tab4ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab4ViewController.h; sourceTree = "<group>"; };
 		0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab4ViewController.m; sourceTree = "<group>"; };
+		0EBE14A921A17A7F00C091D5 /* GPBaseResponseModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPBaseResponseModel.h; sourceTree = "<group>"; };
+		0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPBaseResponseModel.m; sourceTree = "<group>"; };
+		0EBE14AC21A17A8D00C091D5 /* GPBaseServiceModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPBaseServiceModel.h; sourceTree = "<group>"; };
+		0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPBaseServiceModel.m; sourceTree = "<group>"; };
 		2CF7C676F1DBC0465DD92E10 /* Pods-GraduateProj.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GraduateProj.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GraduateProj/Pods-GraduateProj.debug.xcconfig"; sourceTree = "<group>"; };
 		31C066276DCA02A7AF67F821 /* libPods-GraduateProj.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GraduateProj.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA07EDBA2440B63F114ED9CB /* Pods-GraduateProj.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GraduateProj.release.xcconfig"; path = "Pods/Target Support Files/Pods-GraduateProj/Pods-GraduateProj.release.xcconfig"; sourceTree = "<group>"; };
@@ -110,6 +116,8 @@
 		0E47D0F3219FECBA00DF82F0 /* ResponseModel */ = {
 			isa = PBXGroup;
 			children = (
+				0EBE14A921A17A7F00C091D5 /* GPBaseResponseModel.h */,
+				0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */,
 			);
 			path = ResponseModel;
 			sourceTree = "<group>";
@@ -117,6 +125,8 @@
 		0E47D0F4219FECBA00DF82F0 /* ServiceModel */ = {
 			isa = PBXGroup;
 			children = (
+				0EBE14AC21A17A8D00C091D5 /* GPBaseServiceModel.h */,
+				0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */,
 			);
 			path = ServiceModel;
 			sourceTree = "<group>";
@@ -387,9 +397,11 @@
 			files = (
 				0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */,
 				0E47D114219FECBF00DF82F0 /* Tab1ViewController.m in Sources */,
+				0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */,
 				0E47D0EB219FEAB800DF82F0 /* main.m in Sources */,
 				0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */,
 				0E47D0DD219FEAB800DF82F0 /* AppDelegate.m in Sources */,
+				0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */,
 				0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */,
 				0E47D112219FECBF00DF82F0 /* GPBaseViewController.m in Sources */,
 				0E47D113219FECBF00DF82F0 /* GPMainTabBarController.m in Sources */,
