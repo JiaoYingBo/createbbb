@@ -10,6 +10,7 @@
 #import <RTRootNavigationController.h>
 #import <BaiduMapAPI_Base/BMKBaseComponent.h>
 #import "GPMainTabBarController.h"
+#import "LoginViewController.h"
 
 @interface AppDelegate () {
     BMKMapManager* _mapManager;
@@ -29,8 +30,16 @@
     self.window.backgroundColor = [UIColor whiteColor];
     
     RTRootNavigationController *rootViewController;
-    GPMainTabBarController *mtc = [[GPMainTabBarController alloc] init];
-    rootViewController = [[RTRootNavigationController alloc] initWithRootViewControllerNoWrapping:mtc];
+    UIViewController *mainVC;
+    
+    BOOL logined = 0;
+    if (logined) {
+        mainVC = [[GPMainTabBarController alloc] init];
+    } else {
+        mainVC = [[LoginViewController alloc] init];
+    }
+
+    rootViewController = [[RTRootNavigationController alloc] initWithRootViewControllerNoWrapping:mainVC];
     
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];

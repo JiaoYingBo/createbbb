@@ -20,6 +20,8 @@
 		0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */; };
 		0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */; };
 		0E6078BC21A2519D0008F24C /* Tab5ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6078BB21A2519D0008F24C /* Tab5ViewController.m */; };
+		0E6078C221A29FF80008F24C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6078C121A29FF80008F24C /* LoginViewController.m */; };
+		0E6078C721A2A2EC0008F24C /* LoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6078C621A2A2EC0008F24C /* LoginView.m */; };
 		0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */; };
 		0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */; };
 		3791A363C2A14592440D0E1A /* libPods-GraduateProj.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C066276DCA02A7AF67F821 /* libPods-GraduateProj.a */; };
@@ -51,6 +53,10 @@
 		0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab4ViewController.m; sourceTree = "<group>"; };
 		0E6078BA21A2519D0008F24C /* Tab5ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tab5ViewController.h; sourceTree = "<group>"; };
 		0E6078BB21A2519D0008F24C /* Tab5ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tab5ViewController.m; sourceTree = "<group>"; };
+		0E6078C021A29FF80008F24C /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		0E6078C121A29FF80008F24C /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		0E6078C521A2A2EC0008F24C /* LoginView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginView.h; sourceTree = "<group>"; };
+		0E6078C621A2A2EC0008F24C /* LoginView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginView.m; sourceTree = "<group>"; };
 		0EBE14A921A17A7F00C091D5 /* GPBaseResponseModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPBaseResponseModel.h; sourceTree = "<group>"; };
 		0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPBaseResponseModel.m; sourceTree = "<group>"; };
 		0EBE14AC21A17A8D00C091D5 /* GPBaseServiceModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPBaseServiceModel.h; sourceTree = "<group>"; };
@@ -138,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				0E47D0F6219FECBF00DF82F0 /* RootFolder */,
+				0E6078BF21A29FC60008F24C /* LoginUI */,
 				0E47D0FD219FECBF00DF82F0 /* Tab1 */,
 				0E47D102219FECBF00DF82F0 /* Tab2 */,
 				0E47D107219FECBF00DF82F0 /* Tab3 */,
@@ -285,6 +292,33 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		0E6078BF21A29FC60008F24C /* LoginUI */ = {
+			isa = PBXGroup;
+			children = (
+				0E6078C421A2A2D70008F24C /* View */,
+				0E6078C321A2A2BF0008F24C /* Controller */,
+			);
+			path = LoginUI;
+			sourceTree = "<group>";
+		};
+		0E6078C321A2A2BF0008F24C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0E6078C021A29FF80008F24C /* LoginViewController.h */,
+				0E6078C121A29FF80008F24C /* LoginViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		0E6078C421A2A2D70008F24C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E6078C521A2A2EC0008F24C /* LoginView.h */,
+				0E6078C621A2A2EC0008F24C /* LoginView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		38974C9E541FCD373391BAF4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,6 +460,8 @@
 			files = (
 				0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */,
 				0E47D114219FECBF00DF82F0 /* Tab1ViewController.m in Sources */,
+				0E6078C721A2A2EC0008F24C /* LoginView.m in Sources */,
+				0E6078C221A29FF80008F24C /* LoginViewController.m in Sources */,
 				0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */,
 				0E47D0EB219FEAB800DF82F0 /* main.m in Sources */,
 				0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */,

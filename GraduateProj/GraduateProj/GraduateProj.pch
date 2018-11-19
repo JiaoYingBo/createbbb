@@ -9,6 +9,8 @@
 #ifndef GraduateProj_pch
 #define GraduateProj_pch
 
+#import <Masonry.h>
+
 /*-------------------- 屏幕适配 -----------------------------*/
 /** 屏幕高度 */
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
