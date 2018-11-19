@@ -8,9 +8,12 @@
 
 #import "AppDelegate.h"
 #import <RTRootNavigationController.h>
+#import <BaiduMapAPI_Base/BMKBaseComponent.h>
 #import "GPMainTabBarController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () {
+    BMKMapManager* _mapManager;
+}
 
 @end
 
@@ -18,6 +21,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self baiduMapConfig];
     
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:[UIFont boldSystemFontOfSize:17.0]}];
@@ -34,5 +38,13 @@
     return YES;
 }
 
+- (void)baiduMapConfig {
+    _mapManager = [[BMKMapManager alloc] init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:@"QI9I59nAodGr1CPtuvj2kBarkVctUG8o"  generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"BauduMap manager start failed!");
+    }
+}
 
 @end

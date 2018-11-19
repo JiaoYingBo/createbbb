@@ -12,6 +12,7 @@
 #import "Tab2ViewController.h"
 #import "Tab3ViewController.h"
 #import "Tab4ViewController.h"
+#import "Tab5ViewController.h"
 
 @interface GPMainTabBarController ()
 
@@ -32,15 +33,16 @@
 }
 
 - (void)configureTabBar {
-    Tab1ViewController *tab1 = [[Tab1ViewController alloc]init];
+    Tab1ViewController *tab1 = [[Tab1ViewController alloc] init];
     Tab2ViewController *tab2 = [[Tab2ViewController alloc] init];
-    Tab3ViewController *tab3 = [[Tab3ViewController alloc]init];
-    Tab4ViewController *tab4 = [[Tab4ViewController alloc]init];
-    NSMutableArray *vcArr = [NSMutableArray arrayWithObjects:tab1,tab2,tab3,tab4, nil];
+    Tab3ViewController *tab3 = [[Tab3ViewController alloc] init];
+    Tab4ViewController *tab4 = [[Tab4ViewController alloc] init];
+    Tab5ViewController *tab5 = [[Tab5ViewController alloc] init];
+    NSMutableArray *vcArr = [NSMutableArray arrayWithObjects:tab1,tab2,tab3,tab4,tab5, nil];
     
-    NSArray *titleArr = @[@"首页",@"二页",@"三页",@"四页"];
-    NSArray *picArr = @[@"home_normal",@"find_normal",@"chat_normal",@"mine_normal"];
-    NSArray *selectPicArr = @[@"home_selected",@"find_selected",@"chat_selected",@"mine_selected"];
+    NSArray *titleArr = @[@"成绩",@"发现",@"运动",@"干货",@"我的"];
+    NSArray *picArr = @[@"home_normal",@"find_normal",@"cart_normal",@"chat_normal",@"mine_normal"];
+    NSArray *selectPicArr = @[@"home_selected",@"find_selected",@"cart_selected",@"chat_selected",@"mine_selected"];
     
     for (int i = 0; i < vcArr.count; i++) {
         UIViewController *vc = vcArr[i];

@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - BaiduMapKit (4.0.0)
   - IQKeyboardManager (4.0.13)
   - Masonry (1.0.2)
   - MBProgressHUD (1.0.0)
@@ -28,6 +29,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
+  - BaiduMapKit (~> 4.0.0)
   - IQKeyboardManager (~> 4.0.9)
   - Masonry (~> 1.0.2)
   - MBProgressHUD (~> 1.0.0)
@@ -38,6 +40,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  BaiduMapKit: 8fa2eb2ca81b92b740b19d9ff3b59d751d3e92e1
   IQKeyboardManager: 8eab4d8111418414619d1df8e4779ce5d0f8d7e2
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
@@ -46,6 +49,6 @@ SPEC CHECKSUMS:
   RTRootNavigationController: 153e538439fa20faec706019b04375f6c6fabeb6
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: 236b23069814704c50b91e1f1f91edcedf3f1dc2
+PODFILE CHECKSUM: 0de37011a1c9815136fac20dc7779fdf5b3a3962
 
 COCOAPODS: 1.2.0
