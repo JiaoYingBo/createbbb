@@ -15,5 +15,6 @@
 @property (nonatomic, strong) UITextField *userNameTf;
 @property (nonatomic, strong) UITextField *passwordTf;
 @property (nonatomic, strong) UIButton *loginBtn;
+@property (nonatomic, copy) void(^loginClick)(NSUInteger type, NSString *username, NSString *pwd);
 
 @end

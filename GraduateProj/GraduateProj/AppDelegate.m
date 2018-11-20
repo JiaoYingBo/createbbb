@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <IQKeyboardManager.h>
 #import <RTRootNavigationController.h>
 #import <BaiduMapAPI_Base/BMKBaseComponent.h>
 #import "GPMainTabBarController.h"
@@ -23,6 +24,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self baiduMapConfig];
+    [self IQKeyBoardManagerConfig];
     
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:[UIFont boldSystemFontOfSize:17.0]}];
@@ -54,6 +56,10 @@
     if (!ret) {
         NSLog(@"BauduMap manager start failed!");
     }
+}
+
+- (void)IQKeyBoardManagerConfig {
+    [IQKeyboardManager sharedManager].keyboardDistanceFromTextField = 50;
 }
 
 @end

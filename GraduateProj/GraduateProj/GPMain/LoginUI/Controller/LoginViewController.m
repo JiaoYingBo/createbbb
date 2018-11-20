@@ -26,6 +26,9 @@
     self.loginView = [LoginView new];
     self.loginView.frame = self.view.bounds;
     [self.view addSubview:self.loginView];
+    self.loginView.loginClick = ^(NSUInteger type, NSString *username, NSString *pwd) {
+        NSLog(@"%@ %@ %@", type==0?@"学生":@"老师", username, pwd);
+    };
 }
 
 @end

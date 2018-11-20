@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E2D343F21A40F7000255543 /* MOFSDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343621A40F7000255543 /* MOFSDatePicker.m */; };
+		0E2D344021A40F7000255543 /* MOFSToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343721A40F7000255543 /* MOFSToolView.m */; };
+		0E2D344121A40F7000255543 /* MOFSPickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343921A40F7000255543 /* MOFSPickerManager.m */; };
+		0E2D344221A40F7000255543 /* MOFSPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343A21A40F7000255543 /* MOFSPickerView.m */; };
+		0E2D344321A40F7000255543 /* AddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343B21A40F7000255543 /* AddressModel.m */; };
+		0E2D344421A40F7000255543 /* MOFSAddressPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343E21A40F7000255543 /* MOFSAddressPickerView.m */; };
 		0E47D0DD219FEAB800DF82F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D0DC219FEAB800DF82F0 /* AppDelegate.m */; };
 		0E47D0E3219FEAB800DF82F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E47D0E1219FEAB800DF82F0 /* Main.storyboard */; };
 		0E47D0E5219FEAB800DF82F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E47D0E4219FEAB800DF82F0 /* Assets.xcassets */; };
@@ -28,6 +34,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E2D343321A40F7000255543 /* AddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressModel.h; sourceTree = "<group>"; };
+		0E2D343421A40F7000255543 /* MOFSPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerView.h; sourceTree = "<group>"; };
+		0E2D343521A40F7000255543 /* MOFSPickerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerManager.h; sourceTree = "<group>"; };
+		0E2D343621A40F7000255543 /* MOFSDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSDatePicker.m; sourceTree = "<group>"; };
+		0E2D343721A40F7000255543 /* MOFSToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSToolView.m; sourceTree = "<group>"; };
+		0E2D343821A40F7000255543 /* MOFSAddressPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSAddressPickerView.h; sourceTree = "<group>"; };
+		0E2D343921A40F7000255543 /* MOFSPickerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSPickerManager.m; sourceTree = "<group>"; };
+		0E2D343A21A40F7000255543 /* MOFSPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSPickerView.m; sourceTree = "<group>"; };
+		0E2D343B21A40F7000255543 /* AddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressModel.m; sourceTree = "<group>"; };
+		0E2D343C21A40F7000255543 /* MOFSToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSToolView.h; sourceTree = "<group>"; };
+		0E2D343D21A40F7000255543 /* MOFSDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSDatePicker.h; sourceTree = "<group>"; };
+		0E2D343E21A40F7000255543 /* MOFSAddressPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSAddressPickerView.m; sourceTree = "<group>"; };
 		0E47D0D8219FEAB800DF82F0 /* GraduateProj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraduateProj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E47D0DB219FEAB800DF82F0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0E47D0DC219FEAB800DF82F0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -78,6 +96,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E2D343121A40F6000255543 /* ThirdPartLib */ = {
+			isa = PBXGroup;
+			children = (
+				0E2D343221A40F7000255543 /* MOFSPickerManager */,
+			);
+			path = ThirdPartLib;
+			sourceTree = "<group>";
+		};
+		0E2D343221A40F7000255543 /* MOFSPickerManager */ = {
+			isa = PBXGroup;
+			children = (
+				0E2D343321A40F7000255543 /* AddressModel.h */,
+				0E2D343421A40F7000255543 /* MOFSPickerView.h */,
+				0E2D343521A40F7000255543 /* MOFSPickerManager.h */,
+				0E2D343621A40F7000255543 /* MOFSDatePicker.m */,
+				0E2D343721A40F7000255543 /* MOFSToolView.m */,
+				0E2D343821A40F7000255543 /* MOFSAddressPickerView.h */,
+				0E2D343921A40F7000255543 /* MOFSPickerManager.m */,
+				0E2D343A21A40F7000255543 /* MOFSPickerView.m */,
+				0E2D343B21A40F7000255543 /* AddressModel.m */,
+				0E2D343C21A40F7000255543 /* MOFSToolView.h */,
+				0E2D343D21A40F7000255543 /* MOFSDatePicker.h */,
+				0E2D343E21A40F7000255543 /* MOFSAddressPickerView.m */,
+			);
+			path = MOFSPickerManager;
+			sourceTree = "<group>";
+		};
 		0E47D0CF219FEAB800DF82F0 = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +161,7 @@
 		0E47D0F2219FECBA00DF82F0 /* GPExpand */ = {
 			isa = PBXGroup;
 			children = (
+				0E2D343121A40F6000255543 /* ThirdPartLib */,
 				0E47D0F3219FECBA00DF82F0 /* ResponseModel */,
 				0E47D0F4219FECBA00DF82F0 /* ServiceModel */,
 			);
@@ -458,6 +504,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E2D344121A40F7000255543 /* MOFSPickerManager.m in Sources */,
+				0E2D344221A40F7000255543 /* MOFSPickerView.m in Sources */,
+				0E2D344321A40F7000255543 /* AddressModel.m in Sources */,
 				0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */,
 				0E47D114219FECBF00DF82F0 /* Tab1ViewController.m in Sources */,
 				0E6078C721A2A2EC0008F24C /* LoginView.m in Sources */,
@@ -465,12 +514,15 @@
 				0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */,
 				0E47D0EB219FEAB800DF82F0 /* main.m in Sources */,
 				0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */,
+				0E2D344021A40F7000255543 /* MOFSToolView.m in Sources */,
 				0E47D0DD219FEAB800DF82F0 /* AppDelegate.m in Sources */,
+				0E2D343F21A40F7000255543 /* MOFSDatePicker.m in Sources */,
 				0E6078BC21A2519D0008F24C /* Tab5ViewController.m in Sources */,
 				0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */,
 				0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */,
 				0E47D112219FECBF00DF82F0 /* GPBaseViewController.m in Sources */,
 				0E47D113219FECBF00DF82F0 /* GPMainTabBarController.m in Sources */,
+				0E2D344421A40F7000255543 /* MOFSAddressPickerView.m in Sources */,
 				0E47D111219FECBF00DF82F0 /* GPBaseNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

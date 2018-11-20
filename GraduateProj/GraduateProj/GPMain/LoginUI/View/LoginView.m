@@ -7,6 +7,7 @@
 //
 
 #import "LoginView.h"
+#import "MOFSPickerManager.h"
 
 @interface LoginView ()
 
@@ -134,7 +135,7 @@
     self.passwordTf = [[UITextField alloc] init];
     NSAttributedString *placeholder2 = [[NSAttributedString alloc] initWithString:@"请输入密码" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
     self.passwordTf.attributedPlaceholder = placeholder2;
-    self.passwordTf.keyboardType = UIKeyboardTypePhonePad;
+    self.passwordTf.keyboardType = UIKeyboardTypeASCIICapable;
     self.passwordTf.borderStyle = UITextBorderStyleNone;
     self.passwordTf.font = [UIFont systemFontOfSize:16*kScreen_W_Scale];
     self.passwordTf.textColor = [UIColor whiteColor];
@@ -162,11 +163,19 @@
 }
 
 - (void)selectBtnClick {
-    
+    __weak typeof(self) weakSelf = self;
+    [[MOFSPickerManager shareManger] showPickerViewWithDataArray:@[@"学生",@"老师"] tag:1 title:@"选择身份" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
+        weakSelf.selectBtnLabel.text = [NSString stringWithFormat:@"%@登录", string];
+    } cancelBlock:^{
+
+    }];
 }
 
 - (void)loginBtnClick {
-    
+    if (self.loginClick) {
+        NSUInteger type = [self.selectBtnLabel.text containsString:@"老师"];
+        self.loginClick(type, self.userNameTf.text, self.passwordTf.text);
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
