@@ -7,7 +7,9 @@
 //
 
 #import "LoginViewController.h"
+#import "GPMainTabBarController.h"
 #import "LoginView.h"
+#import <MBProgressHUD.h>
 
 @interface LoginViewController ()
 
@@ -28,6 +30,16 @@
     [self.view addSubview:self.loginView];
     self.loginView.loginClick = ^(NSUInteger type, NSString *username, NSString *pwd) {
         NSLog(@"%@ %@ %@", type==0?@"学生":@"老师", username, pwd);
+        if (username.length > 0 && pwd.length > 0) {
+            UIWindow *window = [UIApplication sharedApplication].keyWindow;
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
+            hud.label.text = @"正在登录";
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [hud hideAnimated:YES];
+                GPMainTabBarController *mainVC = [[GPMainTabBarController alloc] init];
+                window.rootViewController = mainVC;
+            });
+        }
     };
 }
 

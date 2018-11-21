@@ -99,7 +99,7 @@
     self.userNameTf = [[UITextField alloc] init];
     NSAttributedString *placeholder1 = [[NSAttributedString alloc] initWithString:@"请输入学号" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
     self.userNameTf.attributedPlaceholder = placeholder1;
-    self.userNameTf.keyboardType = UIKeyboardTypePhonePad;
+    self.userNameTf.keyboardType = UIKeyboardTypeNumberPad;
     self.userNameTf.borderStyle = UITextBorderStyleNone;
     self.userNameTf.font = [UIFont systemFontOfSize:16*kScreen_W_Scale];
     self.userNameTf.textColor = [UIColor whiteColor];
@@ -135,7 +135,7 @@
     self.passwordTf = [[UITextField alloc] init];
     NSAttributedString *placeholder2 = [[NSAttributedString alloc] initWithString:@"请输入密码" attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
     self.passwordTf.attributedPlaceholder = placeholder2;
-    self.passwordTf.keyboardType = UIKeyboardTypeASCIICapable;
+    self.passwordTf.keyboardType = UIKeyboardTypeNamePhonePad;
     self.passwordTf.borderStyle = UITextBorderStyleNone;
     self.passwordTf.font = [UIFont systemFontOfSize:16*kScreen_W_Scale];
     self.passwordTf.textColor = [UIColor whiteColor];
@@ -172,6 +172,7 @@
 }
 
 - (void)loginBtnClick {
+    [self endEditing:YES];
     if (self.loginClick) {
         NSUInteger type = [self.selectBtnLabel.text containsString:@"老师"];
         self.loginClick(type, self.userNameTf.text, self.passwordTf.text);
