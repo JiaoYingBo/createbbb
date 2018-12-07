@@ -34,9 +34,10 @@
     RTRootNavigationController *rootViewController;
     UIViewController *mainVC;
     
-    BOOL logined = 0;
+    BOOL logined = 1;
     if (logined) {
         mainVC = [[GPMainTabBarController alloc] init];
+        ((GPMainTabBarController *)mainVC).selectedIndex = 1;
     } else {
         mainVC = [[LoginViewController alloc] init];
     }

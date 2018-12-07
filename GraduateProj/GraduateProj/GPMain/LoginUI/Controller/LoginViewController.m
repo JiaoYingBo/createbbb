@@ -29,8 +29,7 @@
     self.loginView.frame = self.view.bounds;
     [self.view addSubview:self.loginView];
     self.loginView.loginClick = ^(NSUInteger type, NSString *username, NSString *pwd) {
-        NSLog(@"%@ %@ %@", type==0?@"学生":@"老师", username, pwd);
-        if (username.length > 0 && pwd.length > 0) {
+//        if (username.length > 0 && pwd.length > 0) {
             UIWindow *window = [UIApplication sharedApplication].keyWindow;
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
             hud.label.text = @"正在登录";
@@ -39,7 +38,7 @@
                 GPMainTabBarController *mainVC = [[GPMainTabBarController alloc] init];
                 window.rootViewController = mainVC;
             });
-        }
+//        }
     };
 }
 
