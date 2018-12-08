@@ -31,6 +31,8 @@
 		0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AA21A17A7F00C091D5 /* GPBaseResponseModel.m */; };
 		0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */; };
 		0EDAAE8521BA6AB20055EEF9 /* CePingHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAAE8421BA6AB20055EEF9 /* CePingHeaderView.m */; };
+		0EDAAE8921BBA06A0055EEF9 /* CePingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAAE8721BBA06A0055EEF9 /* CePingCell.m */; };
+		0EDAAE8D21BBACB70055EEF9 /* CePingFootderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAAE8C21BBACB70055EEF9 /* CePingFootderView.m */; };
 		3791A363C2A14592440D0E1A /* libPods-GraduateProj.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C066276DCA02A7AF67F821 /* libPods-GraduateProj.a */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +84,10 @@
 		0EBE14AD21A17A8D00C091D5 /* GPBaseServiceModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPBaseServiceModel.m; sourceTree = "<group>"; };
 		0EDAAE8321BA6AB20055EEF9 /* CePingHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CePingHeaderView.h; sourceTree = "<group>"; };
 		0EDAAE8421BA6AB20055EEF9 /* CePingHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CePingHeaderView.m; sourceTree = "<group>"; };
+		0EDAAE8621BBA06A0055EEF9 /* CePingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CePingCell.h; sourceTree = "<group>"; };
+		0EDAAE8721BBA06A0055EEF9 /* CePingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CePingCell.m; sourceTree = "<group>"; };
+		0EDAAE8B21BBACB70055EEF9 /* CePingFootderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CePingFootderView.h; sourceTree = "<group>"; };
+		0EDAAE8C21BBACB70055EEF9 /* CePingFootderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CePingFootderView.m; sourceTree = "<group>"; };
 		2CF7C676F1DBC0465DD92E10 /* Pods-GraduateProj.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GraduateProj.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GraduateProj/Pods-GraduateProj.debug.xcconfig"; sourceTree = "<group>"; };
 		31C066276DCA02A7AF67F821 /* libPods-GraduateProj.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GraduateProj.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA07EDBA2440B63F114ED9CB /* Pods-GraduateProj.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GraduateProj.release.xcconfig"; path = "Pods/Target Support Files/Pods-GraduateProj/Pods-GraduateProj.release.xcconfig"; sourceTree = "<group>"; };
@@ -264,6 +270,10 @@
 			children = (
 				0EDAAE8321BA6AB20055EEF9 /* CePingHeaderView.h */,
 				0EDAAE8421BA6AB20055EEF9 /* CePingHeaderView.m */,
+				0EDAAE8621BBA06A0055EEF9 /* CePingCell.h */,
+				0EDAAE8721BBA06A0055EEF9 /* CePingCell.m */,
+				0EDAAE8B21BBACB70055EEF9 /* CePingFootderView.h */,
+				0EDAAE8C21BBACB70055EEF9 /* CePingFootderView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -526,6 +536,8 @@
 				0E6078BC21A2519D0008F24C /* Tab5ViewController.m in Sources */,
 				0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */,
 				0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */,
+				0EDAAE8D21BBACB70055EEF9 /* CePingFootderView.m in Sources */,
+				0EDAAE8921BBA06A0055EEF9 /* CePingCell.m in Sources */,
 				0E47D112219FECBF00DF82F0 /* GPBaseViewController.m in Sources */,
 				0E47D113219FECBF00DF82F0 /* GPMainTabBarController.m in Sources */,
 				0E2D344421A40F7000255543 /* MOFSAddressPickerView.m in Sources */,

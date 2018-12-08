@@ -8,6 +8,8 @@
 
 #import "Tab2ViewController.h"
 #import "CePingHeaderView.h"
+#import "CePingFootderView.h"
+#import "CePingCell.h"
 
 @interface Tab2ViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -27,15 +29,14 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-    }
+    CePingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ceping"];
+    cell.hideTopLine = indexPath.row == 0;
+    
     return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return 7;
 }
 
 
@@ -47,11 +48,17 @@
         _tableView.delegate = self;
         _tableView.backgroundColor = kColor(239, 239, 239, 1);
         _tableView.rowHeight = 80;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+        [_tableView registerClass:[CePingCell class] forCellReuseIdentifier:@"ceping"];
         
         CePingHeaderView *header = [[CePingHeaderView alloc] init];
-        header.frame =CGRectMake(0, 0, kScreenWidth, 230);
+        header.frame = CGRectMake(0, 0, kScreenWidth, 230);
         _tableView.tableHeaderView = header;
+        
+        CePingFootderView *footer = [[CePingFootderView alloc] init];
+        footer.frame = CGRectMake(0, 0, kScreenWidth, 70);
+        _tableView.tableFooterView = footer;
     }
     return _tableView;
 }
