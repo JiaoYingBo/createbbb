@@ -45,17 +45,12 @@
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        //        _tableView.bounces = NO;
         _tableView.backgroundColor = kColor(239, 239, 239, 1);
-        //        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        //        _tableView.showsVerticalScrollIndicator = NO;
-        //        _tableView.delaysContentTouches = NO;
         _tableView.rowHeight = 80;
-//        _tableView.contentInset = UIEdgeInsetsMake(200, 0, 0, 0);
         _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
         
         CePingHeaderView *header = [[CePingHeaderView alloc] init];
-        header.frame =CGRectMake(0, 0, kScreenWidth, 220);
+        header.frame =CGRectMake(0, 0, kScreenWidth, 230);
         _tableView.tableHeaderView = header;
     }
     return _tableView;

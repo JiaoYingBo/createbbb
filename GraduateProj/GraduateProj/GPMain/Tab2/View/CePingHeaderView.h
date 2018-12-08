@@ -12,6 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CePingHeaderView : UIView
 
+@property (nonatomic, strong) UIImageView *headImg;
+@property (nonatomic, strong) UIImageView *sexImg;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
+
+@property (nonatomic, strong) UIButton *leftBtn;
+@property (nonatomic, strong) UIButton *rightBtn;
+@property (nonatomic, strong) UIView *bottomLine;
+
 @end
 
 NS_ASSUME_NONNULL_END
