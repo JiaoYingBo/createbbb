@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *rightBtn;
 @property (nonatomic, strong) UIView *bottomLine;
 
+@property (nonatomic, copy) void(^leftRightClick)(BOOL isLeft);
+
 @end
 
 NS_ASSUME_NONNULL_END

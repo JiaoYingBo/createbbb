@@ -10,9 +10,13 @@
 #import "CePingHeaderView.h"
 #import "CePingFootderView.h"
 #import "CePingCell.h"
+#import "JiLuCell.h"
+#import "CePingData.h"
+#import "ZiCeData.h"
 
 @interface Tab2ViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, assign) BOOL isCePing; //默认YES
 @property (nonatomic, strong) UITableView *tableView;
 
 @end
@@ -21,7 +25,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self configData];
     [self configUI];
+}
+
+- (void)configData {
+    self.isCePing = YES;
 }
 
 - (void)configUI {
@@ -29,16 +38,28 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CePingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ceping"];
-    cell.hideTopLine = indexPath.row == 0;
-    
-    return cell;
+    if (self.isCePing) {
+        return [CePingData tableView:tableView cellForRowAtIndexPath:indexPath];
+    } else {
+        return [ZiCeData tableView:tableView cellForRowAtIndexPath:indexPath];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 7;
+    if (self.isCePing) {
+        return 7;
+    } else {
+        return 20;
+    }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isCePing) {
+        return [CePingData tableView:tableView heightForRowAtIndexPath:indexPath];
+    } else {
+        return [ZiCeData tableView:tableView heightForRowAtIndexPath:indexPath];
+    }
+}
 
 
 - (UITableView *)tableView {
@@ -47,14 +68,26 @@
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.backgroundColor = kColor(239, 239, 239, 1);
-        _tableView.rowHeight = 80;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
-        [_tableView registerClass:[CePingCell class] forCellReuseIdentifier:@"ceping"];
         
         CePingHeaderView *header = [[CePingHeaderView alloc] init];
         header.frame = CGRectMake(0, 0, kScreenWidth, 230);
         _tableView.tableHeaderView = header;
+        __weak typeof(self) weakSelf = self;
+        header.leftRightClick = ^(BOOL isLeft) {
+            weakSelf.isCePing = isLeft;
+            if (!isLeft) {
+                UIView *footer = [UIView new];
+                footer.frame = CGRectMake(0, 0, kScreenWidth, 50);
+                weakSelf.tableView.tableFooterView = footer;
+            } else {
+                CePingFootderView *footer = [[CePingFootderView alloc] init];
+                footer.frame = CGRectMake(0, 0, kScreenWidth, 70);
+                weakSelf.tableView.tableFooterView = footer;
+            }
+            [weakSelf.tableView reloadData];
+        };
         
         CePingFootderView *footer = [[CePingFootderView alloc] init];
         footer.frame = CGRectMake(0, 0, kScreenWidth, 70);

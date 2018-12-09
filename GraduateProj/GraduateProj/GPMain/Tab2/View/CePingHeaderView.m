@@ -8,13 +8,20 @@
 
 #import "CePingHeaderView.h"
 
-@implementation CePingHeaderView
+@implementation CePingHeaderView {
+    BOOL _isLeft;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        [self configData];
         [self configUI];
     }
     return self;
+}
+
+- (void)configData {
+    _isLeft = YES;
 }
 
 - (void)configUI {
@@ -132,6 +139,12 @@
         make.width.equalTo(self).multipliedBy(0.5);
         make.height.mas_equalTo(3);
     }];
+    if (self.leftRightClick) {
+        if (!_isLeft) {
+            self.leftRightClick(YES);
+        }
+    }
+    _isLeft = YES;
 }
 
 - (void)rightClick {
@@ -144,6 +157,12 @@
         make.width.equalTo(self).multipliedBy(0.5);
         make.height.mas_equalTo(3);
     }];
+    if (self.leftRightClick) {
+        if (_isLeft) {
+            self.leftRightClick(NO);
+        }
+    }
+    _isLeft = NO;
 }
 
 - (void)enableButtonDelay {
