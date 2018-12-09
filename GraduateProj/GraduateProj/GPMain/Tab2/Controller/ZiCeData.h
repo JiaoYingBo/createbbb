@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZiCeData : NSObject
 
 + (JiLuCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
++ (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 + (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -47,9 +47,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.isCePing) {
-        return 7;
+        return [CePingData tableView:tableView numberOfRowsInSection:section];
     } else {
-        return 20;
+        return [ZiCeData tableView:tableView numberOfRowsInSection:section];
     }
 }
 

@@ -71,7 +71,7 @@
     self.numberLabel = [UILabel new];
     self.numberLabel.text = @"180.3";
     self.numberLabel.textColor = kColor(51, 51, 51, 1);
-    self.numberLabel.font = [UIFont boldSystemFontOfSize:30];
+    self.numberLabel.font = [UIFont systemFontOfSize:27];
     [bgView addSubview:self.numberLabel];
     [self.numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.headImg);
@@ -80,11 +80,11 @@
     
     self.unitLabel = [UILabel new];
     self.unitLabel.text = @"厘米";
-    self.unitLabel.textColor = kColor(211, 211, 211, 1);
+    self.unitLabel.textColor = kColor(200, 200, 200, 1);
     self.unitLabel.font = [UIFont systemFontOfSize:15];
     [bgView addSubview:self.unitLabel];
     [self.unitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.headImg).offset(5);
+        make.centerY.equalTo(self.headImg).offset(3);
         make.left.equalTo(bgView.mas_right).offset(-45);
     }];
 }
