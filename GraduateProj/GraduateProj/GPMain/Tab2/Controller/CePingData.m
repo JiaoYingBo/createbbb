@@ -8,7 +8,10 @@
 
 #import "CePingData.h"
 
+#define PlaceHolder @"-"
+
 @implementation CePingData
+static NSMutableArray *_contentArray;
 
 + (CePingCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CePingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ceping"];
@@ -31,16 +34,49 @@
     return 80;
 }
 
++ (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *title = [self nameArray][indexPath.row];
+    NSString *content = [NSString stringWithFormat:@"单位：%@", [self unitArray][indexPath.row]];
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"请输入";
+        textField.keyboardType = UIKeyboardTypeDecimalPad;
+    }];
+    __weak typeof(alertController) weakAlert = alertController;
+    [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *textField = weakAlert.textFields.firstObject;
+        NSString *result = textField.text;
+        NSLog(@"输入：%.2f",[result floatValue]);
+        if ([result floatValue] <= 0) {
+            [[self contentArray] replaceObjectAtIndex:indexPath.row withObject:PlaceHolder];
+        } else {
+            [[self contentArray] replaceObjectAtIndex:indexPath.row withObject:result];
+        }
+        [tableView reloadData];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:alertController animated:YES completion:nil];
+    });
+}
+
 + (NSArray *)nameArray {
     return @[@"身高", @"体重", @"肺活量", @"50米跑", @"坐位体前屈", @"立定跳远", @"引体向上", @"1000米跑"];
 }
 
-+ (NSArray *)contentArray {
-    return @[@"180.3", @"71", @"2000", @"11.2", @"20.5", @"2.6", @"12", @"3"];
++ (NSMutableArray *)contentArray {
+    if (!_contentArray) {
+        _contentArray = @[].mutableCopy;
+        for (int i = 0; i < [self nameArray].count; i ++) {
+            [_contentArray addObject:PlaceHolder];
+        }
+    }
+    return _contentArray;
 }
 
 + (NSArray *)unitArray {
-    return @[@"厘米", @"公斤", @"毫升", @"秒", @"厘米", @"米", @"次", @"分"];
+    return @[@"厘米", @"公斤", @"毫升", @"秒", @"厘米", @"米", @"次", @"秒"];
 }
 
 @end

@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (CePingCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 + (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 + (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
++ (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

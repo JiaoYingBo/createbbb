@@ -61,6 +61,13 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isCePing) {
+        [CePingData tableView:tableView didSelectRowAtIndexPath:indexPath];
+    } else {
+        [ZiCeData tableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+}
 
 - (UITableView *)tableView {
     if (!_tableView) {
