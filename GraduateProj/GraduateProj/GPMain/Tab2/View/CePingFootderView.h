@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CePingFootderView : UIView
 
+@property (nonatomic, copy) void(^submitClick)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END

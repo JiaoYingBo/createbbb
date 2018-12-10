@@ -38,7 +38,9 @@
 }
 
 - (void)submitBtnClick {
-    
+    if (self.submitClick) {
+        self.submitClick();
+    }
 }
 
 @end

@@ -92,6 +92,9 @@
                 CePingFootderView *footer = [[CePingFootderView alloc] init];
                 footer.frame = CGRectMake(0, 0, kScreenWidth, 70);
                 weakSelf.tableView.tableFooterView = footer;
+                footer.submitClick = ^{
+                    [weakSelf alertShow];
+                };
             }
             [weakSelf.tableView reloadData];
         };
@@ -99,8 +102,18 @@
         CePingFootderView *footer = [[CePingFootderView alloc] init];
         footer.frame = CGRectMake(0, 0, kScreenWidth, 70);
         _tableView.tableFooterView = footer;
+        footer.submitClick = ^{
+            [weakSelf alertShow];
+        };
     }
     return _tableView;
+}
+
+- (void)alertShow {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"别测了，你已经废了！" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end
