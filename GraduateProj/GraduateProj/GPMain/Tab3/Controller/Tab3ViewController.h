@@ -10,4 +10,6 @@
 
 @interface Tab3ViewController : GPBaseViewController
 
+@property (nonatomic, assign) CGRect buttonFrame;
+
 @end

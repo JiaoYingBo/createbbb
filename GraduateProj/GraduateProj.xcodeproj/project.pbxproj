@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E2BD5002237AE2000B3EEEF /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD4FF2237AE2000B3EEEF /* MyAnnotation.m */; };
+		0E2BD5052237AE3100B3EEEF /* RunViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD5012237AE3000B3EEEF /* RunViewController.mm */; };
+		0E2BD5062237AE3100B3EEEF /* CircleSpreadTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD5042237AE3100B3EEEF /* CircleSpreadTransition.m */; };
+		0E2BD5112237AE8900B3EEEF /* RunControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD5072237AE8700B3EEEF /* RunControlView.m */; };
+		0E2BD5122237AE8900B3EEEF /* RunStateButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD50B2237AE8800B3EEEF /* RunStateButton.m */; };
+		0E2BD5132237AE8900B3EEEF /* RunCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD50D2237AE8800B3EEEF /* RunCountView.m */; };
+		0E2BD5142237AE8900B3EEEF /* RunButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD50E2237AE8800B3EEEF /* RunButton.m */; };
+		0E2BD5152237AE8900B3EEEF /* RunNavView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD5102237AE8800B3EEEF /* RunNavView.m */; };
+		0E2BD5172237AE9B00B3EEEF /* HelveticaLTStd-Bold_0.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0E2BD5162237AE9A00B3EEEF /* HelveticaLTStd-Bold_0.otf */; };
 		0E2D343F21A40F7000255543 /* MOFSDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343621A40F7000255543 /* MOFSDatePicker.m */; };
 		0E2D344021A40F7000255543 /* MOFSToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343721A40F7000255543 /* MOFSToolView.m */; };
 		0E2D344121A40F7000255543 /* MOFSPickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343921A40F7000255543 /* MOFSPickerManager.m */; };
@@ -23,7 +32,7 @@
 		0E47D113219FECBF00DF82F0 /* GPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D0FC219FECBF00DF82F0 /* GPMainTabBarController.m */; };
 		0E47D114219FECBF00DF82F0 /* Tab1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D100219FECBF00DF82F0 /* Tab1ViewController.m */; };
 		0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D105219FECBF00DF82F0 /* Tab2ViewController.m */; };
-		0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */; };
+		0E47D116219FECBF00DF82F0 /* Tab3ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10A219FECBF00DF82F0 /* Tab3ViewController.mm */; };
 		0E47D117219FECBF00DF82F0 /* Tab4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */; };
 		0E6078BC21A2519D0008F24C /* Tab5ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6078BB21A2519D0008F24C /* Tab5ViewController.m */; };
 		0E6078C221A29FF80008F24C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E6078C121A29FF80008F24C /* LoginViewController.m */; };
@@ -40,6 +49,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E2BD4FE2237AE1F00B3EEEF /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAnnotation.h; sourceTree = "<group>"; };
+		0E2BD4FF2237AE2000B3EEEF /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
+		0E2BD5012237AE3000B3EEEF /* RunViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RunViewController.mm; sourceTree = "<group>"; };
+		0E2BD5022237AE3000B3EEEF /* CircleSpreadTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleSpreadTransition.h; sourceTree = "<group>"; };
+		0E2BD5032237AE3000B3EEEF /* RunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunViewController.h; sourceTree = "<group>"; };
+		0E2BD5042237AE3100B3EEEF /* CircleSpreadTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleSpreadTransition.m; sourceTree = "<group>"; };
+		0E2BD5072237AE8700B3EEEF /* RunControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunControlView.m; sourceTree = "<group>"; };
+		0E2BD5082237AE8800B3EEEF /* RunControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunControlView.h; sourceTree = "<group>"; };
+		0E2BD5092237AE8800B3EEEF /* RunCountView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunCountView.h; sourceTree = "<group>"; };
+		0E2BD50A2237AE8800B3EEEF /* RunButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunButton.h; sourceTree = "<group>"; };
+		0E2BD50B2237AE8800B3EEEF /* RunStateButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunStateButton.m; sourceTree = "<group>"; };
+		0E2BD50C2237AE8800B3EEEF /* RunNavView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunNavView.h; sourceTree = "<group>"; };
+		0E2BD50D2237AE8800B3EEEF /* RunCountView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunCountView.m; sourceTree = "<group>"; };
+		0E2BD50E2237AE8800B3EEEF /* RunButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunButton.m; sourceTree = "<group>"; };
+		0E2BD50F2237AE8800B3EEEF /* RunStateButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunStateButton.h; sourceTree = "<group>"; };
+		0E2BD5102237AE8800B3EEEF /* RunNavView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunNavView.m; sourceTree = "<group>"; };
+		0E2BD5162237AE9A00B3EEEF /* HelveticaLTStd-Bold_0.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaLTStd-Bold_0.otf"; sourceTree = "<group>"; };
 		0E2D343321A40F7000255543 /* AddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressModel.h; sourceTree = "<group>"; };
 		0E2D343421A40F7000255543 /* MOFSPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerView.h; sourceTree = "<group>"; };
 		0E2D343521A40F7000255543 /* MOFSPickerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerManager.h; sourceTree = "<group>"; };
@@ -72,7 +98,7 @@
 		0E47D104219FECBF00DF82F0 /* Tab2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab2ViewController.h; sourceTree = "<group>"; };
 		0E47D105219FECBF00DF82F0 /* Tab2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab2ViewController.m; sourceTree = "<group>"; };
 		0E47D109219FECBF00DF82F0 /* Tab3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3ViewController.h; sourceTree = "<group>"; };
-		0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3ViewController.m; sourceTree = "<group>"; };
+		0E47D10A219FECBF00DF82F0 /* Tab3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tab3ViewController.mm; sourceTree = "<group>"; };
 		0E47D10E219FECBF00DF82F0 /* Tab4ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab4ViewController.h; sourceTree = "<group>"; };
 		0E47D10F219FECBF00DF82F0 /* Tab4ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab4ViewController.m; sourceTree = "<group>"; };
 		0E6078BA21A2519D0008F24C /* Tab5ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tab5ViewController.h; sourceTree = "<group>"; };
@@ -168,6 +194,7 @@
 				0E47D0DC219FEAB800DF82F0 /* AppDelegate.m */,
 				0E47D0F1219FEB4900DF82F0 /* GraduateProj.pch */,
 				0E47D0E1219FEAB800DF82F0 /* Main.storyboard */,
+				0E2BD5162237AE9A00B3EEEF /* HelveticaLTStd-Bold_0.otf */,
 				0E47D0E4219FEAB800DF82F0 /* Assets.xcassets */,
 				0E47D0E6219FEAB800DF82F0 /* LaunchScreen.storyboard */,
 				0E47D0E9219FEAB800DF82F0 /* Info.plist */,
@@ -306,7 +333,13 @@
 			isa = PBXGroup;
 			children = (
 				0E47D109219FECBF00DF82F0 /* Tab3ViewController.h */,
-				0E47D10A219FECBF00DF82F0 /* Tab3ViewController.m */,
+				0E47D10A219FECBF00DF82F0 /* Tab3ViewController.mm */,
+				0E2BD4FE2237AE1F00B3EEEF /* MyAnnotation.h */,
+				0E2BD4FF2237AE2000B3EEEF /* MyAnnotation.m */,
+				0E2BD5022237AE3000B3EEEF /* CircleSpreadTransition.h */,
+				0E2BD5042237AE3100B3EEEF /* CircleSpreadTransition.m */,
+				0E2BD5032237AE3000B3EEEF /* RunViewController.h */,
+				0E2BD5012237AE3000B3EEEF /* RunViewController.mm */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -314,6 +347,16 @@
 		0E47D10B219FECBF00DF82F0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0E2BD50A2237AE8800B3EEEF /* RunButton.h */,
+				0E2BD50E2237AE8800B3EEEF /* RunButton.m */,
+				0E2BD5082237AE8800B3EEEF /* RunControlView.h */,
+				0E2BD5072237AE8700B3EEEF /* RunControlView.m */,
+				0E2BD5092237AE8800B3EEEF /* RunCountView.h */,
+				0E2BD50D2237AE8800B3EEEF /* RunCountView.m */,
+				0E2BD50C2237AE8800B3EEEF /* RunNavView.h */,
+				0E2BD5102237AE8800B3EEEF /* RunNavView.m */,
+				0E2BD50F2237AE8800B3EEEF /* RunStateButton.h */,
+				0E2BD50B2237AE8800B3EEEF /* RunStateButton.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -474,6 +517,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0E47D0E8219FEAB800DF82F0 /* LaunchScreen.storyboard in Resources */,
+				0E2BD5172237AE9B00B3EEEF /* HelveticaLTStd-Bold_0.otf in Resources */,
 				0E47D0E5219FEAB800DF82F0 /* Assets.xcassets in Resources */,
 				0E47D0E3219FEAB800DF82F0 /* Main.storyboard in Resources */,
 			);
@@ -536,9 +580,12 @@
 			files = (
 				0E2D344121A40F7000255543 /* MOFSPickerManager.m in Sources */,
 				0E2D344221A40F7000255543 /* MOFSPickerView.m in Sources */,
+				0E2BD5132237AE8900B3EEEF /* RunCountView.m in Sources */,
 				0E2D344321A40F7000255543 /* AddressModel.m in Sources */,
-				0E47D116219FECBF00DF82F0 /* Tab3ViewController.m in Sources */,
+				0E47D116219FECBF00DF82F0 /* Tab3ViewController.mm in Sources */,
+				0E2BD5052237AE3100B3EEEF /* RunViewController.mm in Sources */,
 				0E47D114219FECBF00DF82F0 /* Tab1ViewController.m in Sources */,
+				0E2BD5112237AE8900B3EEEF /* RunControlView.m in Sources */,
 				0E6078C721A2A2EC0008F24C /* LoginView.m in Sources */,
 				0EDAAE8521BA6AB20055EEF9 /* CePingHeaderView.m in Sources */,
 				0E6078C221A29FF80008F24C /* LoginViewController.m in Sources */,
@@ -551,6 +598,8 @@
 				0E6078BC21A2519D0008F24C /* Tab5ViewController.m in Sources */,
 				0EBE14AE21A17A8D00C091D5 /* GPBaseServiceModel.m in Sources */,
 				0E47D115219FECBF00DF82F0 /* Tab2ViewController.m in Sources */,
+				0E2BD5152237AE8900B3EEEF /* RunNavView.m in Sources */,
+				0E2BD5002237AE2000B3EEEF /* MyAnnotation.m in Sources */,
 				0EDAAE8D21BBACB70055EEF9 /* CePingFootderView.m in Sources */,
 				0EDAAE9321BCEBF30055EEF9 /* ZiCeData.m in Sources */,
 				0EDAAE8921BBA06A0055EEF9 /* CePingCell.m in Sources */,
@@ -558,8 +607,11 @@
 				0EDAAE9621BCF4280055EEF9 /* JiLuCell.m in Sources */,
 				0E47D113219FECBF00DF82F0 /* GPMainTabBarController.m in Sources */,
 				0E2D344421A40F7000255543 /* MOFSAddressPickerView.m in Sources */,
+				0E2BD5142237AE8900B3EEEF /* RunButton.m in Sources */,
 				0E47D111219FECBF00DF82F0 /* GPBaseNavigationController.m in Sources */,
 				0EDAAE9021BCEBAA0055EEF9 /* CePingData.m in Sources */,
+				0E2BD5062237AE3100B3EEEF /* CircleSpreadTransition.m in Sources */,
+				0E2BD5122237AE8900B3EEEF /* RunStateButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

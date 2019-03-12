@@ -37,7 +37,7 @@
     BOOL logined = 1;
     if (logined) {
         mainVC = [[GPMainTabBarController alloc] init];
-        ((GPMainTabBarController *)mainVC).selectedIndex = 1;
+        ((GPMainTabBarController *)mainVC).selectedIndex = 2;
     } else {
         mainVC = [[LoginViewController alloc] init];
     }
