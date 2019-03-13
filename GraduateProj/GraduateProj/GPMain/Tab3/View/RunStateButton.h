@@ -10,11 +10,26 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, RunStateButtonStatus) {
+    RunStateButtonStatusEnd     = 0,
+    RunStateButtonStatusStart   = 1,
+    RunStateButtonStatusPause   = 2,
+    RunStateButtonStatusInvalid = 3,
+};
+
 @interface RunStateButton : UIView
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIColor *tintColor;
+// 默认是Invalid，如果是End/Invalid，button单击不会切换状态，Start和Pause会相互切换状态
+@property (nonatomic, assign) RunStateButtonStatus status;
+// 是否开启长按功能，默认NO
+@property (nonatomic, assign) BOOL enableLongPress;
+// 长按1.5秒后触发
+@property (nonatomic, copy) void(^didEnd)(void);
+@property (nonatomic, copy) void(^didPause)(void);
+@property (nonatomic, copy) void(^didStart)(void);
 
 @end
 

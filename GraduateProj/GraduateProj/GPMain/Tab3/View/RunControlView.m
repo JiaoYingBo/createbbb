@@ -15,10 +15,20 @@
 #import "RunControlView.h"
 #import "RunStateButton.h"
 
+@interface RunControlView ()
+
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) int count;
+// timer是否是暂停状态
+@property (nonatomic, assign) BOOL timerIsPause;
+
+@end
+
 @implementation RunControlView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        _timerIsPause = NO;
         [self configUI];
     }
     return self;
@@ -114,12 +124,70 @@
     RunStateButton *stateBtn1 = [[RunStateButton alloc] initWithFrame:CGRectMake(60, 240, 100, 100)];
     stateBtn1.tintColor = kColor(233, 83, 83, 1);
     stateBtn1.titleLabel.text = @"结束";
+    stateBtn1.status = RunStateButtonStatusEnd;
+    stateBtn1.enableLongPress = YES;
     [self addSubview:stateBtn1];
+    __weak typeof(self)weakSelf = self;
+    stateBtn1.didEnd = ^{
+        NSLog(@"跑步结束，跳转到跑步成绩页面或直接返回 %@", weakSelf);
+        [weakSelf stopTimer];
+    };
     
     RunStateButton *stateBtn2 = [[RunStateButton alloc] initWithFrame:CGRectMake(215, 240, 100, 100)];
     stateBtn2.tintColor = kColor(71, 190, 112, 1);
     stateBtn2.titleLabel.text = @"开始";
+    stateBtn2.status = RunStateButtonStatusStart;
     [self addSubview:stateBtn2];
+    stateBtn2.didStart = ^{
+        NSLog(@"跑步开始");
+        if (self.timerIsPause) {
+            [weakSelf continueTimer];
+        } else {
+            [weakSelf startTimer];
+        }
+    };
+    stateBtn2.didPause = ^{
+        NSLog(@"跑步暂停");
+        [weakSelf pauseTimer];
+    };
+}
+
+- (void)repeatTime {
+    self.count ++;
+    self.timeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",self.count/3600,self.count/60,self.count%60];
+}
+
+- (void)startTimer {
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    self.count = 0;
+    self.timerIsPause = NO;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(repeatTime) userInfo:nil repeats:YES];
+}
+
+- (void)stopTimer {
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    self.count = 0;
+    self.timerIsPause = NO;
+}
+
+- (void)pauseTimer {
+    [self.timer setFireDate:[NSDate distantFuture]];
+    // 暂停后再点继续，timer会立刻调一次函数，会导致秒数立马加一，所以暂停的时候先给它减一
+    if (self.count > 0) {
+        self.count --;
+    }
+    self.timerIsPause = YES;
+}
+
+- (void)continueTimer {
+    [self.timer setFireDate:[NSDate date]];
+    self.timerIsPause = NO;
 }
 
 @end
