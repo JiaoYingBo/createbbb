@@ -11,6 +11,7 @@
 #import "RunNavView.h"
 #import "RunControlView.h"
 #import "CircleSpreadTransition.h"
+#import "CountDownView.h"
 #import <BaiduMapAPI_Base/BMKTypes.h>
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
@@ -24,7 +25,7 @@
 
 #define Map_Height 230.f
 
-@interface RunViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, UIViewControllerTransitioningDelegate>
+@interface RunViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, UIViewControllerTransitioningDelegate, RunControlViewDelegate>
 
 /** 百度地图 */
 @property (nonatomic,weak)  BMKMapView *mapView;
@@ -88,6 +89,7 @@
     };
     
     RunControlView *controlView = [[RunControlView alloc] initWithFrame:CGRectMake(0, 64 + Map_Height, kScreenWidth, kScreenHeight - 64 - Map_Height)];
+    controlView.delegate = self;
     [self.view addSubview:controlView];
 }
 
@@ -212,6 +214,16 @@
     } else {
         [line setPolylineWithCoordinates:coords count:lineArray.count];
     }
+}
+
+#pragma mark - RunControlView Delegate
+- (void)runControlViewDidStart:(RunControlView *)controlView {
+    CountDownView *countDown = [[CountDownView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    [countDown show];
+}
+
+- (void)runControlViewDidEnd:(RunControlView *)controlView {
+    NSLog(@"ye mian fan hui");
 }
 
 #pragma mark - 转场动画

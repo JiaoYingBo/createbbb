@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CountDownView : UIView
 
+@property (nonatomic, strong) UILabel *countLabel;
+
+- (void)show;
+- (void)dismiss;
+
 @end
 
 NS_ASSUME_NONNULL_END

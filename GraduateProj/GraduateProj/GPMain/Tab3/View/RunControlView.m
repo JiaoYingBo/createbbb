@@ -17,6 +17,7 @@
 
 @interface RunControlView ()
 
+@property (nonatomic, strong) RunStateButton *stateBtn1;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) int count;
 // timer是否是暂停状态
@@ -122,33 +123,48 @@
     self.calorieLabel = cal;
     
     RunStateButton *stateBtn1 = [[RunStateButton alloc] initWithFrame:CGRectMake(60, 240, 100, 100)];
-    stateBtn1.tintColor = kColor(233, 83, 83, 1);
+    stateBtn1.tintColor = kColor(220, 220, 220, 1); // 灰色
     stateBtn1.titleLabel.text = @"结束";
-    stateBtn1.status = RunStateButtonStatusEnd;
-    stateBtn1.enableLongPress = YES;
+    stateBtn1.status = RunStateButtonStatusInvalid;
     [self addSubview:stateBtn1];
+    self.stateBtn1 = stateBtn1;
     __weak typeof(self)weakSelf = self;
     stateBtn1.didEnd = ^{
-        NSLog(@"跑步结束，跳转到跑步成绩页面或直接返回 %@", weakSelf);
         [weakSelf stopTimer];
+        if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidEnd:)]) {
+            [weakSelf.delegate runControlViewDidEnd:weakSelf];
+        }
     };
     
     RunStateButton *stateBtn2 = [[RunStateButton alloc] initWithFrame:CGRectMake(215, 240, 100, 100)];
-    stateBtn2.tintColor = kColor(71, 190, 112, 1);
+    stateBtn2.tintColor = kColor(71, 190, 112, 1); // 绿色
     stateBtn2.titleLabel.text = @"开始";
     stateBtn2.status = RunStateButtonStatusStart;
     [self addSubview:stateBtn2];
     stateBtn2.didStart = ^{
-        NSLog(@"跑步开始");
         if (self.timerIsPause) {
             [weakSelf continueTimer];
+            if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidContinue:)]) {
+                [weakSelf.delegate runControlViewDidContinue:weakSelf];
+            }
         } else {
             [weakSelf startTimer];
+            if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidStart:)]) {
+                [weakSelf.delegate runControlViewDidStart:weakSelf];
+            }
         }
+        // 开始和继续的时候让结束按钮不可点击
+        weakSelf.stateBtn1.status = RunStateButtonStatusInvalid;
+        weakSelf.stateBtn1.tintColor = kColor(220, 220, 220, 1); // 灰色
     };
     stateBtn2.didPause = ^{
-        NSLog(@"跑步暂停");
         [weakSelf pauseTimer];
+        if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidPause:)]) {
+            [weakSelf.delegate runControlViewDidPause:weakSelf];
+        }
+        // 暂停的时候才能结束跑步
+        weakSelf.stateBtn1.status = RunStateButtonStatusEnd;
+        weakSelf.stateBtn1.tintColor = kColor(233, 83, 83, 1); // 红色
     };
 }
 

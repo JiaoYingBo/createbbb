@@ -24,9 +24,7 @@ typedef NS_ENUM(NSInteger, RunStateButtonStatus) {
 @property (nonatomic, strong) UIColor *tintColor;
 // 默认是Invalid，如果是End/Invalid，button单击不会切换状态，Start和Pause会相互切换状态
 @property (nonatomic, assign) RunStateButtonStatus status;
-// 是否开启长按功能，默认NO
-@property (nonatomic, assign) BOOL enableLongPress;
-// 长按1.5秒后触发
+// 长按 StopDuration 秒后触发didEnd
 @property (nonatomic, copy) void(^didEnd)(void);
 @property (nonatomic, copy) void(^didPause)(void);
 @property (nonatomic, copy) void(^didStart)(void);

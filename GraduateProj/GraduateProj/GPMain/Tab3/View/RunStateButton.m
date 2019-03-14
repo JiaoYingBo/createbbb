@@ -8,6 +8,8 @@
 
 #import "RunStateButton.h"
 
+#define StopDuration 1.0
+
 @interface RunStateButton () <CAAnimationDelegate>
 
 @property (nonatomic, strong) UIView *displayView;
@@ -19,7 +21,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _status = RunStateButtonStatusInvalid;
-        _enableLongPress = NO;
         [self configUI];
         [self configGesture];
     }
@@ -63,10 +64,6 @@
     [self addGestureRecognizer:longPress];
 }
 
-- (void)setEnableLongPress:(BOOL)enableLongPress {
-    _enableLongPress = enableLongPress;
-}
-
 - (void)setTintColor:(UIColor *)tintColor {
     _tintColor = tintColor;
     self.contentView.backgroundColor = tintColor;
@@ -92,7 +89,7 @@
     } else if (self.status == RunStateButtonStatusPause) {
         self.status = RunStateButtonStatusStart;
         self.tintColor = kColor(71, 190, 112, 1);
-        self.titleLabel.text = @"开始";
+        self.titleLabel.text = @"继续";
         if (self.didPause) {
             self.didPause();
         }
@@ -100,7 +97,7 @@
 }
 
 - (void)longGesture:(UILongPressGestureRecognizer *)sender {
-    if (self.enableLongPress == NO) {
+    if (self.status != RunStateButtonStatusEnd) {
         return;
     }
     if (sender.state == UIGestureRecognizerStateBegan) {
@@ -126,7 +123,7 @@
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     animation.fromValue = @(0);
     animation.toValue = @(1);
-    animation.duration = 1.5;
+    animation.duration = StopDuration;
     animation.delegate = self;
     [layer addAnimation:animation forKey:nil];
 }
