@@ -10,7 +10,8 @@
 
 typedef NS_ENUM(NSUInteger, XWCircleSpreadTransitionType) {
     XWCircleSpreadTransitionTypePresent = 0,
-    XWCircleSpreadTransitionTypeDismiss
+    XWCircleSpreadTransitionTypeDismiss = 1,
+    XWCircleSpreadTransitionTypeNormal  = 2,
 };
 
 NS_ASSUME_NONNULL_BEGIN

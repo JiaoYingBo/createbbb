@@ -7,6 +7,7 @@
 //
 
 #import "RunViewController.h"
+#import "RunResultController.h"
 #import "MyAnnotation.h"
 #import "RunNavView.h"
 #import "RunControlView.h"
@@ -34,6 +35,8 @@
 /** 点 */
 @property (nonatomic,strong) BMKPointAnnotation *pointAnnotation;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
+// 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不得置nil
+@property (nonatomic, assign) BOOL isHideMode;
 
 @end
 
@@ -45,6 +48,17 @@
     self = [super init];
     if (self) {
         self.transitioningDelegate = self;
+        /**
+         关于自定义转场动画：
+         
+         先说说在实现non-interactive动画时，遇到的问题。
+         
+         在写demo时，用了controller.modalPresentationStyle = UIModalPresentationCustom;  就无法在- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext函数中通过toViewController.frame 获得 frame了，全是0，开始想不通，后来发现，之所以不用UIModalPresentationCustom时，可以获得frame，是因为系统通过modalPresentationStylez为toViewController.frame设定了初始值，而用了UIModalPresentationCustom，系统就不管toViewController.frame的初始化了，自然要自己指定frame了！这也才是custom的意义，自定义弹出开始和结束时的frame。另外还有一个问题，如果使用了controller.modalPresentationStyle = UIModalPresentationCustom，并且屏幕经过了旋转90度，transitionContext的containerView的坐标系并不会一起旋转，结果就是，先旋转，再present出controller，那么controller的frame就错了。
+         
+         但是如果不使用UIModalPresentationCustom，而使用其他的style(在ipad上测试)，同时使用自定义动画，要么会产生视图bug（UIModalPresentationFormSheet和UIModalPresentationPageSheet），要么还是像以前一样，会把原来controller的view从hierarchy上移掉(UIModalPresentationFullScreen，UIModalPresentationNone)！就达不到同时现实2个controller的view的效果了。如果仅仅想更改动画效果，不需要2个controller同时出现，那么不应该使用UIModalPresentationCustom。如果使用了UIModalPresentationCustom，那么就需要针对屏幕的各个方向，调整自定义动画的start frame 和 end frame。比如需要支持4个方向，那么就需要4组start frame 和 end frame，这样才能达到不同方向，相同的弹出效果。（摘自https://www.cnblogs.com/breezemist/p/3460497.html）
+         
+         简单说就是使用UIModalPresentationCustom模式时，fromVC不会消失
+         */
         self.modalPresentationStyle = UIModalPresentationCustom;
     }
     return self;
@@ -85,6 +99,8 @@
     [self.view addSubview:navView];
     __weak typeof(self)weakSelf = self;
     navView.leftBtnClick = ^{
+        // 点击“隐藏”按钮时设为YES
+        weakSelf.isHideMode = YES;
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     };
     
@@ -225,7 +241,13 @@
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
-    NSLog(@"ye mian fan hui");
+    RunResultController *resultVC = [[RunResultController alloc] init];
+    [self presentViewController:resultVC animated:YES completion:nil];
+    __weak typeof(self)weakSelf = self;
+    resultVC.dismissClick = ^{
+//        weakSelf.transitioningDelegate = nil;
+        [weakSelf.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    };
 }
 
 #pragma mark - 转场动画
@@ -234,7 +256,10 @@
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    return [CircleSpreadTransition transitionWithTransitionType:XWCircleSpreadTransitionTypeDismiss];
+    if (self.isHideMode) {
+        return [CircleSpreadTransition transitionWithTransitionType:XWCircleSpreadTransitionTypeDismiss];
+    }
+    return [CircleSpreadTransition transitionWithTransitionType:XWCircleSpreadTransitionTypeNormal];
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator {
@@ -247,6 +272,8 @@
     [_mapView viewWillAppear];
     _mapView.delegate = self;
     _locationService.delegate = self;
+    // 每次进入此页面就初始化为NO
+    self.isHideMode = NO;
     
     /**
      参考 https://www.jianshu.com/p/25e9c1a864be

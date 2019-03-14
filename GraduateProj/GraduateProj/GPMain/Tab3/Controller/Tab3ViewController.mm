@@ -21,6 +21,8 @@
 @property (nonatomic, strong) RunCountView *countView;
 @property (nonatomic, strong) RunButton *runBtn;
 
+@property (nonatomic, strong) RunViewController *runVC;
+
 @end
 
 @implementation Tab3ViewController
@@ -80,10 +82,16 @@
     return self.runBtn.frame;
 }
 
+- (RunViewController *)runVC {
+    if (!_runVC) {
+        _runVC = [[RunViewController alloc] init];
+    }
+    return _runVC;
+}
+
 #pragma mark - 点击代理
 - (void)didClickedRunButton:(RunButton *)btn {
-    RunViewController *runVC = [[RunViewController alloc] init];
-    [self presentViewController:runVC animated:YES completion:nil];
+    [self presentViewController:[[RunViewController alloc] init] animated:YES completion:nil];
 }
 
 - (void)didClickedRunCountView:(RunCountView *)countView {

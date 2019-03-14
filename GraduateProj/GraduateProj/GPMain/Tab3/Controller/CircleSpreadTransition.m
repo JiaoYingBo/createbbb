@@ -37,15 +37,50 @@
         case XWCircleSpreadTransitionTypeDismiss:
             [self dismissAnimation:transitionContext];
             break;
+        case XWCircleSpreadTransitionTypeNormal:
+            [self normalDismissAnimation:transitionContext];
+            break;
     }
 }
 
-- (void)dismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)normalDismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
+    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    
+    UIView *toView = nil;
+    UIView *fromView = nil;
+    UIView *transView = nil;
+    
+    if ([transitionContext respondsToSelector:@selector(viewForKey:)]) {
+        fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+        toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    } else {
+        fromView = fromViewController.view;
+        toView = toViewController.view;
+    }
+    transView = fromView;
+    [[transitionContext containerView] insertSubview:toView belowSubview:fromView];
+    
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    CGFloat height = [UIScreen mainScreen].bounds.size.height;
+    
+    transView.frame = CGRectMake(0, 0, width, height);
+    
+    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+        transView.frame = CGRectMake(0, height, width, height);
+    } completion:^(BOOL finished) {
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+    }];
+}
+
+- (void)dismissAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UINavigationController *toVC = (UINavigationController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UITabBarController *tabbar = ((RTContainerController *)toVC.viewControllers.firstObject).contentViewController;
     Tab3ViewController *temp = ((UINavigationController *)(tabbar.viewControllers[2])).viewControllers.lastObject;
     UIView *containerView = [transitionContext containerView];
+    // 不使用UIModalPresentationCustom时，返回的时候toVC是空白的，因为系统回收了，所以需要手动放置一个toView
+//    [[transitionContext containerView] insertSubview:temp.view belowSubview:fromVC.view];
     //画两个圆路径
     CGFloat radius = sqrtf(containerView.frame.size.height * containerView.frame.size.height + containerView.frame.size.width * containerView.frame.size.width) / 2;
     UIBezierPath *startCycle = [UIBezierPath bezierPathWithArcCenter:containerView.center radius:radius startAngle:0 endAngle:M_PI * 2 clockwise:YES];
@@ -67,7 +102,7 @@
     [maskLayer addAnimation:maskLayerAnimation forKey:@"path"];
 }
 
-- (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext{
+- (void)presentAnimation:(id<UIViewControllerContextTransitioning>)transitionContext {
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     /**
      present的时候，这个fromVC是上个页面的最外层父页面
@@ -104,20 +139,21 @@
     [maskLayer addAnimation:maskLayerAnimation forKey:@"path"];
 }
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     switch (_type) {
         case XWCircleSpreadTransitionTypePresent:{
             id<UIViewControllerContextTransitioning> transitionContext = [anim valueForKey:@"transitionContext"];
             [transitionContext completeTransition:YES];
-            //            [transitionContext viewControllerForKey:UITransitionContextToViewKey].view.layer.mask = nil;
         }
             break;
         case XWCircleSpreadTransitionTypeDismiss:{
             id<UIViewControllerContextTransitioning> transitionContext = [anim valueForKey:@"transitionContext"];
-            [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-            if ([transitionContext transitionWasCancelled]) {
-                [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey].view.layer.mask = nil;
-            }
+            [transitionContext completeTransition:YES];
+        }
+            break;
+        case XWCircleSpreadTransitionTypeNormal:{
+//            id<UIViewControllerContextTransitioning> transitionContext = [anim valueForKey:@"transitionContext"];
+//            [transitionContext completeTransition:YES];
         }
             break;
     }
