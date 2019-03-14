@@ -39,13 +39,13 @@
     self.backgroundColor = kColor(51, 51, 68, 1);
     
     UILabel *distanceLab = [UILabel new];
-    distanceLab.text = @"KM";
-    distanceLab.textColor = kColor(129, 129, 129, 1);
-    distanceLab.font = [UIFont systemFontOfSize:17];
+    distanceLab.text = @"公里";
+    distanceLab.textColor = [UIColor whiteColor];
+    distanceLab.font = [UIFont systemFontOfSize:16];
     [self addSubview:distanceLab];
     [distanceLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(80);
-        make.right.equalTo(self).offset(-100);
+        make.right.equalTo(self).offset(-90);
     }];
     
     UILabel *distance = [UILabel new];
@@ -60,13 +60,13 @@
     self.distanceLabel = distance;
     
     UILabel *speedLab = [UILabel new];
-    speedLab.text = @"配速";
+    speedLab.text = @"公里/小时";
     speedLab.textColor = kColor(129, 129, 129, 1);
     speedLab.font = [UIFont systemFontOfSize:16];
     [self addSubview:speedLab];
     [speedLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(190);
-        make.left.equalTo(self).offset(40);
+        make.left.equalTo(self).offset(20);
     }];
     
     UILabel *speed = [UILabel new];
@@ -81,7 +81,7 @@
     self.speedLabel = speed;
     
     UILabel *timeLab = [UILabel new];
-    timeLab.text = @"时间";
+    timeLab.text = @"用时";
     timeLab.textColor = kColor(129, 129, 129, 1);
     timeLab.font = [UIFont systemFontOfSize:16];
     [self addSubview:timeLab];
@@ -102,13 +102,13 @@
     self.timeLabel = time;
     
     UILabel *calLab = [UILabel new];
-    calLab.text = @"消耗";
+    calLab.text = @"消耗/千卡";
     calLab.textColor = kColor(129, 129, 129, 1);
     calLab.font = [UIFont systemFontOfSize:16];
     [self addSubview:calLab];
     [calLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(speedLab);
-        make.right.equalTo(self).offset(-40);
+        make.right.equalTo(self).offset(-20);
     }];
     
     UILabel *cal = [UILabel new];
@@ -166,6 +166,12 @@
         weakSelf.stateBtn1.status = RunStateButtonStatusEnd;
         weakSelf.stateBtn1.tintColor = kColor(233, 83, 83, 1); // 红色
     };
+}
+
+- (void)updateDistance:(NSString *)distance speed:(NSString *)speed calorie:(NSString *)calorie {
+    self.distanceLabel.text = distance;
+    self.speedLabel.text = speed;
+    self.calorieLabel.text = calorie;
 }
 
 - (void)repeatTime {

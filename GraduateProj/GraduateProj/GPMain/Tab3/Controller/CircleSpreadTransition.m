@@ -92,7 +92,6 @@
     fromVC.view.layer.mask = maskLayer;
     //创建路径动画
     CABasicAnimation *maskLayerAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-    maskLayerAnimation.delegate = self;
     maskLayerAnimation.fromValue = (__bridge id)(startCycle.CGPath);
     maskLayerAnimation.toValue = (__bridge id)((endCycle.CGPath));
     maskLayerAnimation.duration = [self transitionDuration:transitionContext];

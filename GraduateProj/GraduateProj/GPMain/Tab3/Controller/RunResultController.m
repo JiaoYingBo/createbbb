@@ -21,8 +21,9 @@
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.dismissClick) {
-        self.dismissClick();
+//        self.dismissClick();
     }
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dealloc {

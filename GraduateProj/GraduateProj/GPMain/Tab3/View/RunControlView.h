@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<RunControlViewDelegate> delegate;
 
 - (void)timeStart;
+- (void)updateDistance:(NSString *)distance speed:(NSString *)speed calorie:(NSString *)calorie;
 
 @end
 

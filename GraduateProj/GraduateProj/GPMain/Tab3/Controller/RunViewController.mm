@@ -35,13 +35,16 @@
 /** 点 */
 @property (nonatomic,strong) BMKPointAnnotation *pointAnnotation;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
-// 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不得置nil
+// 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不可置nil
 @property (nonatomic, assign) BOOL isHideMode;
+@property (nonatomic, weak) RunControlView *controlView;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
 @implementation RunViewController {
     NSMutableArray *lineArray;
+    CLLocationDistance _totalDistance;
 }
 
 - (instancetype)init {
@@ -60,6 +63,7 @@
          简单说就是使用UIModalPresentationCustom模式时，fromVC不会消失
          */
         self.modalPresentationStyle = UIModalPresentationCustom;
+        _totalDistance = 0;
     }
     return self;
 }
@@ -107,6 +111,7 @@
     RunControlView *controlView = [[RunControlView alloc] initWithFrame:CGRectMake(0, 64 + Map_Height, kScreenWidth, kScreenHeight - 64 - Map_Height)];
     controlView.delegate = self;
     [self.view addSubview:controlView];
+    self.controlView = controlView;
 }
 
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
@@ -136,9 +141,19 @@
     
     return nil;
 }
+// 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
+- (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
+    if (_totalDistance < 0) {
+        return;
+    }
+    NSString *discante = [NSString stringWithFormat:@"%.2f", _totalDistance/1000];
+    NSString *speed = [NSString stringWithFormat:@"%.f", userLocation.location.speed*3.6];
+    NSString *calorie = [NSString stringWithFormat:@"%.f", 60*_totalDistance/1000*1.036];
+    [self.controlView updateDistance:discante speed:speed calorie:calorie];
+}
 
 #pragma mark - BMKLocationServiceDelegate
-- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation{
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
     // 设置地图中心为用户经纬度
     [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
     
@@ -146,6 +161,8 @@
     
     [self setMapLineWithLocation:userLocation];
     
+    [self updateControlViewWithBMKUserLocation:userLocation];
+    NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
 }
 
 /**
@@ -196,7 +213,8 @@
     /*
      horizontalAccuracy的单位是米，代表当前GPS信号精确到了多少米，越接近于0定位就越准确，GPS信号也就越强，当horizontalAccuracy为负数时，当前为没有GPS信号，所以一般情况下参考horizontalAccuracy就可以向用户展示当前的信号强度
      */
-    if (userLocation.location.horizontalAccuracy > 5) {
+    // 突然大于15可能是GPS信号弱定位漂移了，忽略
+    if (userLocation.location.horizontalAccuracy > 15) {
         return;
     }
     
@@ -214,6 +232,11 @@
         return;
     }
     [lineArray addObject:userLocation.location];
+    
+    // 更新ControlView上的数据
+    _totalDistance += distance;
+    [self updateControlViewWithBMKUserLocation:userLocation];
+    
     CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[lineArray.count];
     for (int i = 0; i < lineArray.count; i++) {
         CLLocation *loc = lineArray[i];
@@ -238,16 +261,12 @@
     [countDown showWithDismissCompletion:^{
         [controlView timeStart];
     }];
+    [self updateControlViewWithBMKUserLocation:nil];
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
     RunResultController *resultVC = [[RunResultController alloc] init];
     [self presentViewController:resultVC animated:YES completion:nil];
-    __weak typeof(self)weakSelf = self;
-    resultVC.dismissClick = ^{
-//        weakSelf.transitioningDelegate = nil;
-        [weakSelf.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    };
 }
 
 #pragma mark - 转场动画
@@ -301,6 +320,11 @@
     [lineArray removeAllObjects];
     [_locationService startUserLocationService];
 }
+
+- (void)updateControlView {
+    [self updateControlViewWithBMKUserLocation:nil];
+}
+
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！
 - (void)dealloc {
     NSLog(@"run dealloc");
