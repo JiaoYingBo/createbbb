@@ -8,6 +8,12 @@
 
 #import "CountDownView.h"
 
+@interface CountDownView ()
+
+@property (nonatomic, copy) void(^didCompletion)(void);
+
+@end
+
 @implementation CountDownView {
     NSTimer *_timer;
     int _count;
@@ -36,7 +42,17 @@
     self.countLabel = distance;
 }
 
-- (void)show {
+//- (void)show {
+//    [[UIApplication sharedApplication].keyWindow addSubview:self];
+//    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//        self.alpha = 1;
+//    } completion:^(BOOL finished) {
+//        self.countLabel.text = @"3";
+//        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(repeatTime) userInfo:nil repeats:YES];
+//    }];
+//}
+- (void)showWithDismissCompletion:(void(^)(void))completion {
+    _didCompletion = completion;
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.alpha = 1;
@@ -50,6 +66,11 @@
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.alpha = 0.2;
     } completion:^(BOOL finished) {
+        if (_didCompletion) {
+            _didCompletion();
+            // 这里怎么解除内存泄漏，这个方法不知是否可行！！！！！！！！！！！！！！
+            _didCompletion = nil;
+        }
         [self removeFromSuperview];
     }];
 }
@@ -59,7 +80,7 @@
         self.countLabel.text = [NSString stringWithFormat:@"%d", _count];
         _count --;
     } else if (_count == 0) {
-        self.countLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:150];
+        self.countLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:130];
         self.countLabel.text = @"GO";
         _count --;
     } else {

@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<RunControlViewDelegate> delegate;
 
+- (void)timeStart;
+
 @end
 
 NS_ASSUME_NONNULL_END

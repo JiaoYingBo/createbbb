@@ -219,7 +219,9 @@
 #pragma mark - RunControlView Delegate
 - (void)runControlViewDidStart:(RunControlView *)controlView {
     CountDownView *countDown = [[CountDownView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-    [countDown show];
+    [countDown showWithDismissCompletion:^{
+        [controlView timeStart];
+    }];
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {

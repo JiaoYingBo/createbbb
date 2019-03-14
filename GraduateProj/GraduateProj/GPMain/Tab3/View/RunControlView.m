@@ -124,7 +124,7 @@
     
     RunStateButton *stateBtn1 = [[RunStateButton alloc] initWithFrame:CGRectMake(60, 240, 100, 100)];
     stateBtn1.tintColor = kColor(220, 220, 220, 1); // 灰色
-    stateBtn1.titleLabel.text = @"结束";
+    stateBtn1.title = @"结束";
     stateBtn1.status = RunStateButtonStatusInvalid;
     [self addSubview:stateBtn1];
     self.stateBtn1 = stateBtn1;
@@ -138,7 +138,7 @@
     
     RunStateButton *stateBtn2 = [[RunStateButton alloc] initWithFrame:CGRectMake(215, 240, 100, 100)];
     stateBtn2.tintColor = kColor(71, 190, 112, 1); // 绿色
-    stateBtn2.titleLabel.text = @"开始";
+    stateBtn2.title = @"开始";
     stateBtn2.status = RunStateButtonStatusStart;
     [self addSubview:stateBtn2];
     stateBtn2.didStart = ^{
@@ -148,7 +148,7 @@
                 [weakSelf.delegate runControlViewDidContinue:weakSelf];
             }
         } else {
-            [weakSelf startTimer];
+//            [weakSelf startTimer];
             if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidStart:)]) {
                 [weakSelf.delegate runControlViewDidStart:weakSelf];
             }
@@ -171,6 +171,10 @@
 - (void)repeatTime {
     self.count ++;
     self.timeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",self.count/3600,self.count/60,self.count%60];
+}
+
+- (void)timeStart {
+    [self startTimer];
 }
 
 - (void)startTimer {

@@ -19,8 +19,8 @@ typedef NS_ENUM(NSInteger, RunStateButtonStatus) {
 
 @interface RunStateButton : UIView
 
-@property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UIButton *contentBtn;
+@property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIColor *tintColor;
 // 默认是Invalid，如果是End/Invalid，button单击不会切换状态，Start和Pause会相互切换状态
 @property (nonatomic, assign) RunStateButtonStatus status;

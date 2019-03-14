@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *countLabel;
 
-- (void)show;
+- (void)showWithDismissCompletion:(void(^)(void))completion;
 - (void)dismiss;
 
 @end
