@@ -39,6 +39,8 @@
 @property (nonatomic, assign) BOOL isHideMode;
 @property (nonatomic, weak) RunControlView *controlView;
 @property (nonatomic, strong) NSTimer *timer;
+// 是否开始跑步
+@property (nonatomic, assign) BOOL didStartRun;
 
 @end
 
@@ -64,6 +66,7 @@
          */
         self.modalPresentationStyle = UIModalPresentationCustom;
         _totalDistance = 0;
+        _didStartRun = NO;
     }
     return self;
 }
@@ -92,6 +95,7 @@
     locationService.delegate = self;
     [locationService startUserLocationService];
     _locationService = locationService;
+//    [_locationService stopUserLocationService];
     BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
     _pointAnnotation = point;
 }
@@ -143,7 +147,8 @@
 }
 // 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
 - (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
-    if (_totalDistance < 0) {
+    // 刚开始定位的时候会出现负数，忽略
+    if (_totalDistance < 0 || userLocation.location.speed < 0) {
         return;
     }
     NSString *discante = [NSString stringWithFormat:@"%.2f", _totalDistance/1000];
@@ -156,13 +161,12 @@
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
     // 设置地图中心为用户经纬度
     [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
-    
     [self setAnnotationWithLocation:userLocation];
     
-    [self setMapLineWithLocation:userLocation];
-    
-    [self updateControlViewWithBMKUserLocation:userLocation];
-    NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
+    if (self.didStartRun) {
+        [self setMapLineWithLocation:userLocation];
+        NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
+    }
 }
 
 /**
@@ -189,11 +193,9 @@
     if (circle == nil) {
         circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:userLocation.location.horizontalAccuracy];
         [_mapView addOverlay:circle];
-    }else{
-        
+    } else {
         circle.radius = 10;//userLocation.location.horizontalAccuracy;
         circle.coordinate = userLocation.location.coordinate;
-        
     }
     
     //设置方向角度
@@ -226,15 +228,19 @@
     CLLocation *last = lineArray.lastObject;
     CLLocationDistance distance = [userLocation.location distanceFromLocation:last];
     // 经纬度没变或者距离小于4
-    if ((last.coordinate.longitude == userLocation.location.coordinate.longitude
-         &&last.coordinate.latitude == userLocation.location.coordinate.latitude)
-        || (distance < 4 && lineArray.count != 0)) {
+    if ((last.coordinate.longitude == userLocation.location.coordinate.longitude &&
+         last.coordinate.latitude == userLocation.location.coordinate.latitude) ||
+        (distance < 4 && lineArray.count != 0)) {
+        // 此时不绘制路线，但要更新页面数据
+        NSLog(@"不绘制路线，但刷新数据");
+        [self updateControlViewWithBMKUserLocation:userLocation];
         return;
     }
     [lineArray addObject:userLocation.location];
     
     // 更新ControlView上的数据
     _totalDistance += distance;
+    NSLog(@"又绘制，又刷新");
     [self updateControlViewWithBMKUserLocation:userLocation];
     
     CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[lineArray.count];
@@ -257,14 +263,18 @@
 
 #pragma mark - RunControlView Delegate
 - (void)runControlViewDidStart:(RunControlView *)controlView {
+    __weak typeof(self)weakSelf = self;
     CountDownView *countDown = [[CountDownView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
     [countDown showWithDismissCompletion:^{
+        // 倒计时结束再开始计时和绘制路线
         [controlView timeStart];
+        weakSelf.didStartRun = YES;
     }];
-    [self updateControlViewWithBMKUserLocation:nil];
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
+    self.didStartRun = NO;
+    [self.locationService stopUserLocationService];
     RunResultController *resultVC = [[RunResultController alloc] init];
     [self presentViewController:resultVC animated:YES completion:nil];
 }
@@ -321,9 +331,9 @@
     [_locationService startUserLocationService];
 }
 
-- (void)updateControlView {
-    [self updateControlViewWithBMKUserLocation:nil];
-}
+//- (void)updateControlView {
+//    [self updateControlViewWithBMKUserLocation:nil];
+//}
 
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！
 - (void)dealloc {

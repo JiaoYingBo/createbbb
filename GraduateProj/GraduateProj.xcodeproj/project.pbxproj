@@ -18,6 +18,7 @@
 		0E2BD5172237AE9B00B3EEEF /* HelveticaLTStd-Bold_0.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0E2BD5162237AE9A00B3EEEF /* HelveticaLTStd-Bold_0.otf */; };
 		0E2BD51A2238AF2A00B3EEEF /* CountDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD5192238AF2A00B3EEEF /* CountDownView.m */; };
 		0E2BD520223A3E2300B3EEEF /* RunResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD51F223A3E2300B3EEEF /* RunResultController.m */; };
+		0E2BD523223B3BFB00B3EEEF /* TargetLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BD522223B3BFB00B3EEEF /* TargetLockView.m */; };
 		0E2D343F21A40F7000255543 /* MOFSDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343621A40F7000255543 /* MOFSDatePicker.m */; };
 		0E2D344021A40F7000255543 /* MOFSToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343721A40F7000255543 /* MOFSToolView.m */; };
 		0E2D344121A40F7000255543 /* MOFSPickerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343921A40F7000255543 /* MOFSPickerManager.m */; };
@@ -72,6 +73,8 @@
 		0E2BD5192238AF2A00B3EEEF /* CountDownView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountDownView.m; sourceTree = "<group>"; };
 		0E2BD51E223A3E2300B3EEEF /* RunResultController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunResultController.h; sourceTree = "<group>"; };
 		0E2BD51F223A3E2300B3EEEF /* RunResultController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunResultController.m; sourceTree = "<group>"; };
+		0E2BD521223B3BFB00B3EEEF /* TargetLockView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TargetLockView.h; sourceTree = "<group>"; };
+		0E2BD522223B3BFB00B3EEEF /* TargetLockView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TargetLockView.m; sourceTree = "<group>"; };
 		0E2D343321A40F7000255543 /* AddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressModel.h; sourceTree = "<group>"; };
 		0E2D343421A40F7000255543 /* MOFSPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerView.h; sourceTree = "<group>"; };
 		0E2D343521A40F7000255543 /* MOFSPickerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSPickerManager.h; sourceTree = "<group>"; };
@@ -357,6 +360,8 @@
 			children = (
 				0E2BD5092237AE8800B3EEEF /* RunCountView.h */,
 				0E2BD50D2237AE8800B3EEEF /* RunCountView.m */,
+				0E2BD521223B3BFB00B3EEEF /* TargetLockView.h */,
+				0E2BD522223B3BFB00B3EEEF /* TargetLockView.m */,
 				0E2BD50A2237AE8800B3EEEF /* RunButton.h */,
 				0E2BD50E2237AE8800B3EEEF /* RunButton.m */,
 				0E2BD50C2237AE8800B3EEEF /* RunNavView.h */,
@@ -599,6 +604,7 @@
 				0E6078C721A2A2EC0008F24C /* LoginView.m in Sources */,
 				0EDAAE8521BA6AB20055EEF9 /* CePingHeaderView.m in Sources */,
 				0E6078C221A29FF80008F24C /* LoginViewController.m in Sources */,
+				0E2BD523223B3BFB00B3EEEF /* TargetLockView.m in Sources */,
 				0EBE14AB21A17A7F00C091D5 /* GPBaseResponseModel.m in Sources */,
 				0E2BD520223A3E2300B3EEEF /* RunResultController.m in Sources */,
 				0E47D0EB219FEAB800DF82F0 /* main.m in Sources */,

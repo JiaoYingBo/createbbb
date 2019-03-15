@@ -12,15 +12,17 @@
 #import "RunCountView.h"
 #import "RunButton.h"
 #import "RunViewController.h"
+#import "TargetLockView.h"
 
 @interface Tab3ViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, RunCountViewDelegate, RunButtonDelegate>
 /** 百度地图 */
 @property (nonatomic, weak)  BMKMapView *mapView;
 /** 定位服务 */
 @property (nonatomic, strong) BMKLocationService *locationService;
+@property (nonatomic, assign) BMKUserLocation *userLocation;
+
 @property (nonatomic, strong) RunCountView *countView;
 @property (nonatomic, strong) RunButton *runBtn;
-
 @property (nonatomic, strong) RunViewController *runVC;
 
 @end
@@ -48,16 +50,16 @@
 
 - (void)bmkMapConfig {
     BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, kScreenHeight-64-49)];
-    mapView.zoomLevel = 17;
-    mapView.showMapScaleBar = YES;
+    mapView.zoomLevel = 16;
     mapView.overlookEnabled = NO;
+    mapView.showMapScaleBar = YES;
     mapView.showsUserLocation = YES;
     mapView.mapType = BMKMapTypeStandard;
     mapView.logoPosition = BMKLogoPositionRightBottom;
     mapView.userTrackingMode = BMKUserTrackingModeNone;
     mapView.mapScaleBarPosition = CGPointMake(5.0, CGRectGetHeight(mapView.frame)-20);
+    [self.view addSubview:mapView];
     _mapView = mapView;
-    [self.view addSubview:_mapView];
 }
 
 - (void)bmkServiceConfig {
@@ -76,6 +78,15 @@
     self.runBtn.center = CGPointMake(kScreenWidth/2, kScreenHeight-49-20-40);
     self.runBtn.delegate = self;
     [self.view addSubview:self.runBtn];
+    
+    TargetLockView *lockView = [[TargetLockView alloc] initWithFrame:CGRectMake(10, kScreenHeight-49-80, 35, 35)];
+    [self.view addSubview:lockView];
+    __weak typeof(self)weakSelf = self;
+    lockView.lockBtnClick = ^{
+        weakSelf.mapView.zoomLevel = 17;
+        [weakSelf.mapView updateLocationData:weakSelf.userLocation];
+        [weakSelf.mapView setCenterCoordinate:weakSelf.userLocation.location.coordinate animated:YES];
+    };
 }
 
 - (CGRect)buttonFrame {
@@ -100,12 +111,20 @@
 
 #pragma mark - BMKLocationServiceDelegate
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
-    // 设置地图中心为用户经纬度 （很奇怪，这两句要一块写才能显示当前位置和定位圆圈）
-    // 这三行可以让地图始终处于用户为屏幕中心的位置和17的缩放
-    [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
-    [_mapView updateLocationData:userLocation];
-    _mapView.zoomLevel = 17;
+    // 定位
+    self.userLocation = userLocation;
+    // 打开地图时它会立马定位两次，就用第二次的定位结果显示
+    static int locationTimes = 0;
+    if (locationTimes < 2) {
+        locationTimes ++;
+        // 设置地图中心为用户经纬度 （很奇怪，这两句要一块写才能显示当前位置和定位圆圈）
+        // 这三行可以让地图始终处于用户为屏幕中心的位置和17的缩放
+        _mapView.zoomLevel = 17;
+        [_mapView updateLocationData:userLocation];
+        [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+    }
     
+    // GPS强度
     /**
      horizontalAccuracy的单位是米，代表当前GPS信号精确到了多少米，越接近于0定位就越准确，GPS信号也就越强，
      当horizontalAccuracy为负数时，当前为没有GPS信号，
