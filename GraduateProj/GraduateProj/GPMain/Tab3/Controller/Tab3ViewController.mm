@@ -7,8 +7,13 @@
 //
 
 #import "Tab3ViewController.h"
+#import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKMapView.h>
+#import <BaiduMapAPI_Map/BMKCircleView.h>
+#import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
+#import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
+#import "MyAnnotation.h"
 #import "RunCountView.h"
 #import "RunButton.h"
 #import "RunViewController.h"
@@ -20,6 +25,7 @@
 /** 定位服务 */
 @property (nonatomic, strong) BMKLocationService *locationService;
 @property (nonatomic, assign) BMKUserLocation *userLocation;
+@property (nonatomic,strong) BMKPointAnnotation *pointAnnotation;
 
 @property (nonatomic, strong) RunCountView *countView;
 @property (nonatomic, strong) RunButton *runBtn;
@@ -67,6 +73,8 @@
     locationService.delegate = self;
     _locationService = locationService;
     [_locationService startUserLocationService];
+    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
+    _pointAnnotation = point;
 }
 
 - (void)configUI {
@@ -83,9 +91,7 @@
     [self.view addSubview:lockView];
     __weak typeof(self)weakSelf = self;
     lockView.lockBtnClick = ^{
-        weakSelf.mapView.zoomLevel = 17;
-        [weakSelf.mapView updateLocationData:weakSelf.userLocation];
-        [weakSelf.mapView setCenterCoordinate:weakSelf.userLocation.location.coordinate animated:YES];
+        [weakSelf focusLocationWithBMKUserLocation:weakSelf.userLocation];
     };
 }
 
@@ -109,6 +115,14 @@
     NSLog(@"跳转跑步记录列表页面");
 }
 
+- (void)focusLocationWithBMKUserLocation:(BMKUserLocation *)userLocation {
+    // 这三行可以让地图始终处于用户为屏幕中心的位置和17的缩放
+    _mapView.zoomLevel = 17;
+    // 设置地图中心为用户经纬度 （很奇怪，这两句要一块写才能显示系统定位圈）
+//    [_mapView updateLocationData:userLocation];
+    [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+}
+
 #pragma mark - BMKLocationServiceDelegate
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
     // 定位
@@ -117,11 +131,21 @@
     static int locationTimes = 0;
     if (locationTimes < 2) {
         locationTimes ++;
-        // 设置地图中心为用户经纬度 （很奇怪，这两句要一块写才能显示当前位置和定位圆圈）
-        // 这三行可以让地图始终处于用户为屏幕中心的位置和17的缩放
-        _mapView.zoomLevel = 17;
-        [_mapView updateLocationData:userLocation];
-        [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+        [self focusLocationWithBMKUserLocation:userLocation];
+    }
+    
+    _pointAnnotation.coordinate = userLocation.location.coordinate;
+    if (![_mapView.annotations containsObject:_pointAnnotation]) {
+        [_mapView addAnnotation:_pointAnnotation];
+        [_mapView selectAnnotation:_pointAnnotation animated:YES];
+    }
+    
+    static BMKCircle *circle;
+    if (circle == nil) {
+        circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:150];
+        [_mapView addOverlay:circle];
+    } else {
+        circle.coordinate = userLocation.location.coordinate;
     }
     
     // GPS强度
@@ -141,6 +165,39 @@
         self.countView.GPSStrength = 1; // 弱
     }
 }
+
+#pragma mark - BMKMapViewDelegate
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
+    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"Tab3Annotation"];
+    if (annotationView == nil) {
+        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"Tab3Annotation"];
+    }
+    return annotationView;
+}
+
+- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay {
+    if ([overlay isKindOfClass:[BMKCircle class]]) {
+        BMKCircleView *circleView = [[BMKCircleView alloc] initWithCircle:overlay];
+        circleView.fillColor = kColor(73, 173, 253, 0.2);
+        circleView.strokeColor = [UIColor whiteColor];
+        circleView.lineWidth = 0;
+        return circleView;
+    }
+    
+    return nil;
+}
+
+//- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+//    // 目前没找到更好的改变大小的方法
+//    BMKCircle *circle = mapView.overlays.lastObject;
+//    if (mapView.zoomLevel > 18) {
+//        circle.radius = 30;
+//    } else if (mapView.zoomLevel >= 16 && mapView.zoomLevel < 18) {
+//        circle.radius = 100;
+//    } else {
+//        circle.radius = 200;
+//    }
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

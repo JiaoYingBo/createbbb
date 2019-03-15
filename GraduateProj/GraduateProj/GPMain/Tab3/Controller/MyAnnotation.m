@@ -10,21 +10,28 @@
 
 @implementation MyAnnotation
 
-- (id)initWithAnnotation:(id<BMKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier{
+- (id)initWithAnnotation:(id<BMKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
 
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     
     if (self) {
-//        self.backgroundColor = [UIColor redColor];
-        self.frame = CGRectMake(0, 0, 30, 30);
+        self.frame = CGRectMake(0, 0, 20, 20);
         
-        UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_logistics"]];
-        imgView.frame = CGRectMake(0, 0, 30, 30);
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        bgView.layer.cornerRadius = 10;
+        bgView.layer.shadowOpacity = 1;
+        bgView.layer.shadowOffset = CGSizeMake(0, 0);
+        bgView.layer.shadowColor = [UIColor grayColor].CGColor;
+        bgView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:bgView];
+        
+        UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"circleyuanquan"]];
+        imgView.frame = CGRectMake(0, 0, 15, 15);
+        imgView.center = self.center;
         imgView.contentMode = UIViewContentModeScaleAspectFit;
         _bgImage = imgView;
         self.paopaoView = nil;
         [self addSubview:imgView];
-        
     }
     return self;
 }

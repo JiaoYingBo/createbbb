@@ -49,21 +49,21 @@
     CLLocationDistance _totalDistance;
 }
 
+/**
+ 关于自定义转场动画：
+ 
+ 先说说在实现non-interactive动画时，遇到的问题。
+ 
+ 在写demo时，用了controller.modalPresentationStyle = UIModalPresentationCustom;  就无法在- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext函数中通过toViewController.frame 获得 frame了，全是0，开始想不通，后来发现，之所以不用UIModalPresentationCustom时，可以获得frame，是因为系统通过modalPresentationStylez为toViewController.frame设定了初始值，而用了UIModalPresentationCustom，系统就不管toViewController.frame的初始化了，自然要自己指定frame了！这也才是custom的意义，自定义弹出开始和结束时的frame。另外还有一个问题，如果使用了controller.modalPresentationStyle = UIModalPresentationCustom，并且屏幕经过了旋转90度，transitionContext的containerView的坐标系并不会一起旋转，结果就是，先旋转，再present出controller，那么controller的frame就错了。
+ 
+ 但是如果不使用UIModalPresentationCustom，而使用其他的style(在ipad上测试)，同时使用自定义动画，要么会产生视图bug（UIModalPresentationFormSheet和UIModalPresentationPageSheet），要么还是像以前一样，会把原来controller的view从hierarchy上移掉(UIModalPresentationFullScreen，UIModalPresentationNone)！就达不到同时现实2个controller的view的效果了。如果仅仅想更改动画效果，不需要2个controller同时出现，那么不应该使用UIModalPresentationCustom。如果使用了UIModalPresentationCustom，那么就需要针对屏幕的各个方向，调整自定义动画的start frame 和 end frame。比如需要支持4个方向，那么就需要4组start frame 和 end frame，这样才能达到不同方向，相同的弹出效果。（摘自https://www.cnblogs.com/breezemist/p/3460497.html）
+ 
+ 简单说就是使用UIModalPresentationCustom模式时，fromVC不会消失
+ */
 - (instancetype)init {
     self = [super init];
     if (self) {
         self.transitioningDelegate = self;
-        /**
-         关于自定义转场动画：
-         
-         先说说在实现non-interactive动画时，遇到的问题。
-         
-         在写demo时，用了controller.modalPresentationStyle = UIModalPresentationCustom;  就无法在- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext函数中通过toViewController.frame 获得 frame了，全是0，开始想不通，后来发现，之所以不用UIModalPresentationCustom时，可以获得frame，是因为系统通过modalPresentationStylez为toViewController.frame设定了初始值，而用了UIModalPresentationCustom，系统就不管toViewController.frame的初始化了，自然要自己指定frame了！这也才是custom的意义，自定义弹出开始和结束时的frame。另外还有一个问题，如果使用了controller.modalPresentationStyle = UIModalPresentationCustom，并且屏幕经过了旋转90度，transitionContext的containerView的坐标系并不会一起旋转，结果就是，先旋转，再present出controller，那么controller的frame就错了。
-         
-         但是如果不使用UIModalPresentationCustom，而使用其他的style(在ipad上测试)，同时使用自定义动画，要么会产生视图bug（UIModalPresentationFormSheet和UIModalPresentationPageSheet），要么还是像以前一样，会把原来controller的view从hierarchy上移掉(UIModalPresentationFullScreen，UIModalPresentationNone)！就达不到同时现实2个controller的view的效果了。如果仅仅想更改动画效果，不需要2个controller同时出现，那么不应该使用UIModalPresentationCustom。如果使用了UIModalPresentationCustom，那么就需要针对屏幕的各个方向，调整自定义动画的start frame 和 end frame。比如需要支持4个方向，那么就需要4组start frame 和 end frame，这样才能达到不同方向，相同的弹出效果。（摘自https://www.cnblogs.com/breezemist/p/3460497.html）
-         
-         简单说就是使用UIModalPresentationCustom模式时，fromVC不会消失
-         */
         self.modalPresentationStyle = UIModalPresentationCustom;
         _totalDistance = 0;
         _didStartRun = NO;
@@ -95,7 +95,6 @@
     locationService.delegate = self;
     [locationService startUserLocationService];
     _locationService = locationService;
-//    [_locationService stopUserLocationService];
     BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
     _pointAnnotation = point;
 }
@@ -118,10 +117,11 @@
     self.controlView = controlView;
 }
 
+#pragma mark - BMKMapViewDelegate
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
-    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"myAnno"];
+    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"RunAnnotation"];
     if (annotationView == nil) {
-        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnno"];
+        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"RunAnnotation"];
     }
     return annotationView;
 }
@@ -144,17 +144,6 @@
     }
     
     return nil;
-}
-// 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
-- (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
-    // 刚开始定位的时候会出现负数，忽略
-    if (_totalDistance < 0 || userLocation.location.speed < 0) {
-        return;
-    }
-    NSString *discante = [NSString stringWithFormat:@"%.2f", _totalDistance/1000];
-    NSString *speed = [NSString stringWithFormat:@"%.f", userLocation.location.speed*3.6];
-    NSString *calorie = [NSString stringWithFormat:@"%.f", 60*_totalDistance/1000*1.036];
-    [self.controlView updateDistance:discante speed:speed calorie:calorie];
 }
 
 #pragma mark - BMKLocationServiceDelegate
@@ -260,6 +249,17 @@
         [line setPolylineWithCoordinates:coords count:lineArray.count];
     }
 }
+// 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
+- (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
+    // 刚开始定位的时候会出现负数，忽略
+    if (_totalDistance < 0 || userLocation.location.speed < 0) {
+        return;
+    }
+    NSString *discante = [NSString stringWithFormat:@"%.2f", _totalDistance/1000];
+    NSString *speed = [NSString stringWithFormat:@"%.f", userLocation.location.speed*3.6];
+    NSString *calorie = [NSString stringWithFormat:@"%.f", 60*_totalDistance/1000*1.036];
+    [self.controlView updateDistance:discante speed:speed calorie:calorie];
+}
 
 #pragma mark - RunControlView Delegate
 - (void)runControlViewDidStart:(RunControlView *)controlView {
@@ -330,10 +330,6 @@
     [lineArray removeAllObjects];
     [_locationService startUserLocationService];
 }
-
-//- (void)updateControlView {
-//    [self updateControlViewWithBMKUserLocation:nil];
-//}
 
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！
 - (void)dealloc {
