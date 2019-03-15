@@ -29,11 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *calorieLabel;
 @property (nonatomic, strong) UIButton *startPauseBtn;
 @property (nonatomic, strong) UIButton *endBtn;
+// GPS信号强度（准确度）0:无效 1:弱 2:强 3:超强
+@property (nonatomic, assign) NSInteger GPSStrength;
 
 @property (nonatomic, weak) id<RunControlViewDelegate> delegate;
 
 - (void)timeStart;
-- (void)updateDistance:(NSString *)distance speed:(NSString *)speed calorie:(NSString *)calorie;
+- (void)updateDistance:(nullable NSString *)distance speed:(nullable NSString *)speed calorie:(nullable NSString *)calorie;
 
 @end
 

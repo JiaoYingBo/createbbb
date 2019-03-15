@@ -17,6 +17,9 @@
 
 @interface RunControlView ()
 
+@property (nonatomic, strong) UIView *gps1;
+@property (nonatomic, strong) UIView *gps2;
+@property (nonatomic, strong) UIView *gps3;
 @property (nonatomic, strong) RunStateButton *stateBtn1;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) int count;
@@ -31,6 +34,7 @@
     if (self = [super initWithFrame:frame]) {
         _timerIsPause = NO;
         [self configUI];
+        self.GPSStrength = 0;
     }
     return self;
 }
@@ -44,7 +48,7 @@
     distanceLab.font = [UIFont systemFontOfSize:16];
     [self addSubview:distanceLab];
     [distanceLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(80);
+        make.top.equalTo(self).offset(60);
         make.right.equalTo(self).offset(-90);
     }];
     
@@ -62,11 +66,60 @@
     UILabel *speedLab = [UILabel new];
     speedLab.text = @"公里/小时";
     speedLab.textColor = kColor(129, 129, 129, 1);
-    speedLab.font = [UIFont systemFontOfSize:16];
+    speedLab.font = [UIFont systemFontOfSize:15];
     [self addSubview:speedLab];
     [speedLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(190);
         make.left.equalTo(self).offset(20);
+    }];
+    
+    UIView *line = [UIView new];
+    line.backgroundColor = kColor(240, 248, 255, 0.5);
+    [self addSubview:line];
+    [line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(70);
+        make.right.equalTo(self);
+        make.top.equalTo(self).offset(110);
+        make.height.mas_equalTo(0.5);
+    }];
+    
+    UILabel *gpsLab = [UILabel new];
+    gpsLab.text = @"GPS";
+    gpsLab.textColor = kColor(129, 129, 129, 1);
+    gpsLab.font = [UIFont boldSystemFontOfSize:13];
+    [self addSubview:gpsLab];
+    [gpsLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(line);
+        make.left.equalTo(self).offset(8);
+    }];
+    
+    // 绿色：78, 176, 11
+    self.gps1 = [UIView new];
+    self.gps1.backgroundColor = kColor(78, 176, 11, 1);
+    [self addSubview:self.gps1];
+    [self.gps1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(gpsLab.mas_right).offset(8);
+        make.centerY.equalTo(gpsLab);
+        make.width.mas_equalTo(3);
+        make.height.mas_equalTo(6);
+    }];
+    self.gps2 = [UIView new];
+    self.gps2.backgroundColor = kColor(78, 176, 11, 1);
+    [self addSubview:self.gps2];
+    [self.gps2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.gps1.mas_right).offset(5);
+        make.centerY.equalTo(gpsLab);
+        make.width.mas_equalTo(3);
+        make.height.mas_equalTo(6);
+    }];
+    self.gps3 = [UIView new];
+    self.gps3.backgroundColor = kColor(78, 176, 11, 1);
+    [self addSubview:self.gps3];
+    [self.gps3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.gps2.mas_right).offset(5);
+        make.centerY.equalTo(gpsLab);
+        make.width.mas_equalTo(3);
+        make.height.mas_equalTo(6);
     }];
     
     UILabel *speed = [UILabel new];
@@ -81,9 +134,9 @@
     self.speedLabel = speed;
     
     UILabel *timeLab = [UILabel new];
-    timeLab.text = @"用时";
+    timeLab.text = @"时间";
     timeLab.textColor = kColor(129, 129, 129, 1);
-    timeLab.font = [UIFont systemFontOfSize:16];
+    timeLab.font = [UIFont systemFontOfSize:15];
     [self addSubview:timeLab];
     [timeLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(speedLab);
@@ -104,7 +157,7 @@
     UILabel *calLab = [UILabel new];
     calLab.text = @"消耗/千卡";
     calLab.textColor = kColor(129, 129, 129, 1);
-    calLab.font = [UIFont systemFontOfSize:16];
+    calLab.font = [UIFont systemFontOfSize:15];
     [self addSubview:calLab];
     [calLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(speedLab);
@@ -168,10 +221,38 @@
     };
 }
 
-- (void)updateDistance:(NSString *)distance speed:(NSString *)speed calorie:(NSString *)calorie {
-    self.distanceLabel.text = distance;
-    self.speedLabel.text = speed;
-    self.calorieLabel.text = calorie;
+- (void)setGPSStrength:(NSInteger)GPSStrength {
+    _GPSStrength = GPSStrength;
+    // 0:无效 1:弱 2:强 3:超强
+    UIColor *gray = [UIColor lightGrayColor];
+    UIColor *green = kColor(78, 176, 11, 1);
+    if (GPSStrength == 0) {
+        self.gps1.backgroundColor = gray;
+        self.gps2.backgroundColor = gray;
+        self.gps3.backgroundColor = gray;
+    } else if (GPSStrength == 1) {
+        self.gps1.backgroundColor = green;
+        self.gps2.backgroundColor = gray;
+        self.gps3.backgroundColor = gray;
+    } else if (GPSStrength == 2) {
+        self.gps1.backgroundColor = green;
+        self.gps2.backgroundColor = green;
+        self.gps3.backgroundColor = gray;
+    } else if (GPSStrength == 3) {
+        self.gps1.backgroundColor = green;
+        self.gps2.backgroundColor = green;
+        self.gps3.backgroundColor = green;
+    }
+}
+
+- (void)updateDistance:(nullable NSString *)distance speed:(nullable NSString *)speed calorie:(nullable NSString *)calorie {
+    if (distance == nil) {
+        self.speedLabel.text = speed;
+    } else {
+        self.distanceLabel.text = distance;
+        self.speedLabel.text = speed;
+        self.calorieLabel.text = calorie;
+    }
 }
 
 - (void)repeatTime {

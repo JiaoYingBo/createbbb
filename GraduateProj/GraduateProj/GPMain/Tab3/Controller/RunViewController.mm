@@ -5,6 +5,7 @@
 //  Created by 焦英博 on 2019/3/10.
 //  Copyright © 2019 mlg. All rights reserved.
 //
+// 现在需要做顶部导航栏文字改变；暂停时的绘制逻辑和暂停多段数据存储x
 
 #import "RunViewController.h"
 #import "RunResultController.h"
@@ -82,7 +83,9 @@
     BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, Map_Height)];
     mapView.zoomLevel = 17;
     mapView.overlookEnabled = NO;
-    mapView.showsUserLocation = YES;
+    mapView.rotateEnabled = NO;
+    mapView.maxZoomLevel = 19;
+    mapView.minZoomLevel = 10;
     mapView.mapType = BMKMapTypeStandard;
     mapView.logoPosition = BMKLogoPositionRightBottom;
     mapView.userTrackingMode = BMKUserTrackingModeNone;
@@ -135,13 +138,13 @@
         return overlayView;
     }
     
-    if ([overlay isKindOfClass:[BMKCircle class]]) {
-        BMKCircleView *circleView = [[BMKCircleView alloc] initWithCircle:overlay];
-        circleView.fillColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.328];
-        circleView.strokeColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.879];
-        circleView.lineWidth = 0;
-        return circleView;
-    }
+//    if ([overlay isKindOfClass:[BMKCircle class]]) {
+//        BMKCircleView *circleView = [[BMKCircleView alloc] initWithCircle:overlay];
+//        circleView.fillColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.328];
+//        circleView.strokeColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.879];
+//        circleView.lineWidth = 0;
+//        return circleView;
+//    }
     
     return nil;
 }
@@ -150,11 +153,39 @@
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
     // 设置地图中心为用户经纬度
     [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+    _mapView.zoomLevel = 17;
+    // 设置大头针
     [self setAnnotationWithLocation:userLocation];
-    
+    // 绘制路线
     if (self.didStartRun) {
         [self setMapLineWithLocation:userLocation];
         NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
+    } else {
+        // 表示暂停跑步了
+        if (lineArray.count > 0) {
+            [self updateControlViewWithBMKUserLocation:nil];
+        }
+    }
+    // 更新GPS信号
+    [self updateGPSWithLocation:userLocation];
+}
+
+- (void)updateGPSWithLocation:(BMKUserLocation*)userLocation {
+    // GPS强度
+    /**
+     horizontalAccuracy的单位是米，代表当前GPS信号精确到了多少米，越接近于0定位就越准确，GPS信号也就越强，
+     当horizontalAccuracy为负数时，当前为没有GPS信号，
+     所以一般情况下参考horizontalAccuracy就可以向用户展示当前的信号强度
+     我自己定义0~10超强，10~60强，60以上弱，负数无效
+     */
+    if (userLocation.location.horizontalAccuracy < 0) {
+        self.controlView.GPSStrength = 0; // 无效
+    } else if (userLocation.location.horizontalAccuracy <= 10) {
+        self.controlView.GPSStrength = 3; // 超强
+    } else if (userLocation.location.horizontalAccuracy > 10 && userLocation.location.horizontalAccuracy <= 60) {
+        self.controlView.GPSStrength = 2; // 强
+    } else {
+        self.controlView.GPSStrength = 1; // 弱
     }
 }
 
@@ -166,11 +197,11 @@
         return;
     }
     // 方向度数，0为正北方
-    double dir = userLocation.location.course;
+//    double dir = userLocation.location.course;
     // 单位m/s
-    CLLocationSpeed speed = userLocation.location.speed;
-    _pointAnnotation.title = [NSString stringWithFormat:@"我(精确度:%.0f m)",userLocation.location.horizontalAccuracy];
-    _pointAnnotation.subtitle = [NSString stringWithFormat:@"时速:%0.1fKm/h",(speed<0? 0:speed) * 3.6f];
+//    CLLocationSpeed speed = userLocation.location.speed;
+//    _pointAnnotation.title = [NSString stringWithFormat:@"我(精确度:%.0f m)",userLocation.location.horizontalAccuracy];
+//    _pointAnnotation.subtitle = [NSString stringWithFormat:@"时速:%0.1fKm/h",(speed<0? 0:speed) * 3.6f];
     _pointAnnotation.coordinate = userLocation.location.coordinate;
     if (![_mapView.annotations containsObject:_pointAnnotation]) {
         [_mapView addAnnotation:_pointAnnotation];
@@ -178,21 +209,21 @@
     }
     
     //误差范围指示器
-    static BMKCircle *circle;
-    if (circle == nil) {
-        circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:userLocation.location.horizontalAccuracy];
-        [_mapView addOverlay:circle];
-    } else {
-        circle.radius = 10;//userLocation.location.horizontalAccuracy;
-        circle.coordinate = userLocation.location.coordinate;
-    }
+//    static BMKCircle *circle;
+//    if (circle == nil) {
+//        circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:userLocation.location.horizontalAccuracy];
+//        [_mapView addOverlay:circle];
+//    } else {
+//        circle.radius = 10;//userLocation.location.horizontalAccuracy;
+//        circle.coordinate = userLocation.location.coordinate;
+//    }
     
     //设置方向角度
-    MyAnnotation *annotationView = (MyAnnotation*)[_mapView viewForAnnotation:_pointAnnotation];
-    if (![annotationView isKindOfClass:[MyAnnotation class]]) {
-        return;
-    }
-    annotationView.bgImage.transform = CGAffineTransformMakeRotation((dir + 90 - _mapView.rotation) * M_PI / 180);
+//    MyAnnotation *annotationView = (MyAnnotation*)[_mapView viewForAnnotation:_pointAnnotation];
+//    if (![annotationView isKindOfClass:[MyAnnotation class]]) {
+//        return;
+//    }
+//    annotationView.bgImage.transform = CGAffineTransformMakeRotation((dir + 90 - _mapView.rotation) * M_PI / 180);
 }
 /**
  *  设置运动轨迹地图路径
@@ -206,6 +237,7 @@
      */
     // 突然大于15可能是GPS信号弱定位漂移了，忽略
     if (userLocation.location.horizontalAccuracy > 15) {
+        NSLog(@">15，信号可能漂移，不稳定");
         return;
     }
     
@@ -251,10 +283,19 @@
 }
 // 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
 - (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
-    // 刚开始定位的时候会出现负数，忽略
-    if (_totalDistance < 0 || userLocation.location.speed < 0) {
+    // 为nil表示暂停跑步了，只把速度变为0，其它不变
+    if (userLocation == nil) {
+        [self.controlView updateDistance:nil speed:@"0" calorie:nil];
         return;
     }
+    // 刚开始定位的时候会出现负数，忽略
+    if (userLocation.location.speed < 0) {
+        return;
+    }
+    if (_totalDistance < 0) {
+        _totalDistance = 0;
+    }
+    
     NSString *discante = [NSString stringWithFormat:@"%.2f", _totalDistance/1000];
     NSString *speed = [NSString stringWithFormat:@"%.f", userLocation.location.speed*3.6];
     NSString *calorie = [NSString stringWithFormat:@"%.f", 60*_totalDistance/1000*1.036];
@@ -270,6 +311,14 @@
         [controlView timeStart];
         weakSelf.didStartRun = YES;
     }];
+}
+
+- (void)runControlViewDidPause:(RunControlView *)controlView {
+    self.didStartRun = NO;
+}
+
+- (void)runControlViewDidContinue:(RunControlView *)controlView {
+    self.didStartRun = YES;
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
