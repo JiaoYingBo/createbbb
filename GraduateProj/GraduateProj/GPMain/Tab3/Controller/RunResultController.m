@@ -24,6 +24,7 @@
 //        self.dismissClick();
     }
     [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
 }
 
 - (void)dealloc {

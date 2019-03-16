@@ -20,6 +20,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self configUI];
+        self.isRunning = NO;
     }
     return self;
 }
@@ -39,6 +40,15 @@
     self.label.textColor = [UIColor whiteColor];
     if (self.delegate) {
         [self.delegate didClickedRunButton:self];
+    }
+}
+
+- (void)setIsRunning:(BOOL)isRunning {
+    _isRunning = isRunning;
+    if (_isRunning) {
+        self.label.text = @"跑步中";
+    } else {
+        self.label.text = @"开始\n跑步";
     }
 }
 

@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RunButton : UIView
 
+@property (nonatomic, assign) BOOL isRunning;
 @property (nonatomic, weak) id<RunButtonDelegate> delegate;
 
 @end

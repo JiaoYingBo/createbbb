@@ -23,19 +23,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSMutableArray *total = @[].mutableCopy;
-    NSMutableArray *temp = nil;
-    NSMutableArray *a1 = @[@"1",@"2"].mutableCopy;
-    temp = a1;
-    [total addObject:temp];
-    NSLog(@"111--%@", total); // 1 2
-    [temp addObject:@"0"];
-    NSLog(@"444--%@", total);
-    NSMutableArray *a2 = @[@"3",@"4"].mutableCopy;
-    temp = a2;
-    NSLog(@"222--%@", total); // 1 2
-    [total addObject:temp];
-    NSLog(@"333--%@", total); // 1 2 , 3 4
     [self baiduMapConfig];
     [self IQKeyBoardManagerConfig];
     

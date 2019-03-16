@@ -5,24 +5,23 @@
 //  Created by 焦英博 on 2019/3/10.
 //  Copyright © 2019 mlg. All rights reserved.
 //
-// 暂停时的绘制逻辑和暂停多段数据存储x
 
 #import "RunViewController.h"
 #import "RunResultController.h"
-#import "MyAnnotation.h"
 #import "RunNavView.h"
+#import "MyAnnotation.h"
+#import "CountDownView.h"
 #import "RunControlView.h"
 #import "CircleSpreadTransition.h"
-#import "CountDownView.h"
 #import <BaiduMapAPI_Base/BMKTypes.h>
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
 #import <BaiduMapAPI_Map/BMKMapView.h>
 #import <BaiduMapAPI_Map/BMKPolyline.h>
-#import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
 #import <BaiduMapAPI_Map/BMKPolylineView.h>
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
+#import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>//引入定位功能所有的头文件
 
 #define Map_Height 230.f
@@ -103,6 +102,8 @@
 - (void)bmkServiceConfig {
     BMKLocationService *locationService = [[BMKLocationService alloc] init];
     locationService.delegate = self;
+    // 后台定位设置参考：https://www.jianshu.com/p/cc3cee4f64a9
+    locationService.allowsBackgroundLocationUpdates = YES;
     [locationService startUserLocationService];
     _locationService = locationService;
     BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
@@ -145,15 +146,6 @@
         overlayView.strokeColor = [UIColor colorWithRed:0.167 green:0.840 blue:0.043 alpha:1];
         return overlayView;
     }
-    
-//    if ([overlay isKindOfClass:[BMKCircle class]]) {
-//        BMKCircleView *circleView = [[BMKCircleView alloc] initWithCircle:overlay];
-//        circleView.fillColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.328];
-//        circleView.strokeColor = [UIColor colorWithRed:0.989 green:0.417 blue:0.057 alpha:0.879];
-//        circleView.lineWidth = 0;
-//        return circleView;
-//    }
-    
     return nil;
 }
 
@@ -216,16 +208,6 @@
         [_mapView selectAnnotation:_pointAnnotation animated:YES];
     }
     
-    //误差范围指示器
-//    static BMKCircle *circle;
-//    if (circle == nil) {
-//        circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:userLocation.location.horizontalAccuracy];
-//        [_mapView addOverlay:circle];
-//    } else {
-//        circle.radius = 10;//userLocation.location.horizontalAccuracy;
-//        circle.coordinate = userLocation.location.coordinate;
-//    }
-    
     //设置方向角度
 //    MyAnnotation *annotationView = (MyAnnotation*)[_mapView viewForAnnotation:_pointAnnotation];
 //    if (![annotationView isKindOfClass:[MyAnnotation class]]) {
@@ -249,10 +231,6 @@
         return;
     }
     
-//    if (_lineArray == nil) {
-//        _lineArray = [NSMutableArray new];
-//        return;
-//    }
     if (_lineTempArray.count == 0) {
         [_lineTempArray addObject:userLocation.location];
         return;
@@ -297,23 +275,6 @@
             [line setPolylineWithCoordinates:coords count:temp.count];
         }
     }
-    
-//    CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[_lineTempArray.count];
-//    for (int i = 0; i < _lineTempArray.count; i++) {
-//        CLLocation *loc = _lineTempArray[i];
-//        coords[i] = loc.coordinate;
-//    }
-//
-//    if (_lineTempArray.count <= 1) {
-//        return;
-//    }
-//    static BMKPolyline *line;
-//    if (line == nil) {
-//        line = [BMKPolyline polylineWithCoordinates:coords count:_lineTempArray.count];
-//        [_mapView addOverlay:line];
-//    } else {
-//        [line setPolylineWithCoordinates:coords count:_lineTempArray.count];
-//    }
 }
 // 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
 - (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
@@ -345,6 +306,7 @@
         [controlView timeStart];
         weakSelf.didStartRun = YES;
         weakSelf.navView.titleLabel.text = @"跑步中";
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidStartRun" object:nil];
     }];
 }
 
@@ -410,18 +372,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
-    _mapView.delegate = nil;
-    _locationService.delegate = nil;
-//    _lineArray = nil;
+//    _mapView.delegate = nil;
+//    _locationService.delegate = nil;
     
     [UIApplication sharedApplication].statusBarStyle = self.statusBarStyleRecord;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    [_locationService stopUserLocationService];
-//    [_lineArray removeAllObjects];
-    [_locationService startUserLocationService];
 }
 
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！

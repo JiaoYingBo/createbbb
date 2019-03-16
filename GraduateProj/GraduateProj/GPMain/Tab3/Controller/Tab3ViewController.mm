@@ -40,6 +40,8 @@
     [self bmkMapConfig];
     [self bmkServiceConfig];
     [self configUI];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runVCStartStateObserve) name:@"RunControllerDidStartRun" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runVCEndStateObserve) name:@"RunControllerDidEndRun" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -106,9 +108,18 @@
     return _runVC;
 }
 
+- (void)runVCStartStateObserve {
+    self.runBtn.isRunning = YES;
+}
+
+- (void)runVCEndStateObserve {
+    self.runVC = nil;
+    self.runBtn.isRunning = NO;
+}
+
 #pragma mark - 点击代理
 - (void)didClickedRunButton:(RunButton *)btn {
-    [self presentViewController:[[RunViewController alloc] init] animated:YES completion:nil];
+    [self presentViewController:self.runVC animated:YES completion:nil];
 }
 
 - (void)didClickedRunCountView:(RunCountView *)countView {
@@ -133,13 +144,13 @@
         locationTimes ++;
         [self focusLocationWithBMKUserLocation:userLocation];
     }
-    
+    // 大头针
     _pointAnnotation.coordinate = userLocation.location.coordinate;
     if (![_mapView.annotations containsObject:_pointAnnotation]) {
         [_mapView addAnnotation:_pointAnnotation];
         [_mapView selectAnnotation:_pointAnnotation animated:YES];
     }
-    
+    // 范围圈
     static BMKCircle *circle;
     if (circle == nil) {
         circle = [BMKCircle circleWithCenterCoordinate:userLocation.location.coordinate radius:150];
