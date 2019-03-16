@@ -17,6 +17,7 @@
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 
 @interface RunResultController ()<BMKMapViewDelegate, BMKLocationServiceDelegate>
 
@@ -54,7 +55,7 @@
 - (void)bmkServiceConfig {
     BMKLocationService *locationService = [[BMKLocationService alloc] init];
     locationService.delegate = self;
-    [locationService startUserLocationService];
+//    [locationService startUserLocationService];
     _locationService = locationService;
     BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
     _pointAnnotation = point;
@@ -73,6 +74,39 @@
     };
     self.navView = navView;
     
+}
+
+// 根据坐标路线显示合适的地图区域
+- (void)mapViewFitPolyLine:(BMKPolyline *)polyLine {
+    CGFloat ltX, ltY, rbX, rbY;
+    if (polyLine.pointCount < 1) {
+        return;
+    }
+    BMKMapPoint pt = polyLine.points[0];
+    ltX = pt.x;
+    ltY = pt.y;
+    rbX = pt.x;
+    rbY = pt.y;
+    for (int i = 1; i < polyLine.pointCount; i++) {
+        BMKMapPoint pt = polyLine.points[i];
+        if (pt.x < ltX) {
+            ltX = pt.x;
+        }
+        if (pt.x > rbX) {
+            rbX = pt.x;
+        }
+        if (pt.y > ltY) {
+            ltY = pt.y;
+        }
+        if (pt.y < rbY) {
+            rbY = pt.y;
+        }
+    }
+    BMKMapRect rect;
+    rect.origin = BMKMapPointMake(ltX , ltY);
+    rect.size = BMKMapSizeMake(rbX - ltX, rbY - ltY);
+    [_mapView setVisibleMapRect:rect];
+    _mapView.zoomLevel = _mapView.zoomLevel - 0.3;
 }
 
 #pragma mark - BMKMapViewDelegate
@@ -96,7 +130,8 @@
 }
 
 - (void)mapViewDidFinishLoading:(BMKMapView *)mapView {
-    [self setMapLineWithLocation];
+    [self mapViewFitPolyLine:[self getMapLine]];
+    [self setMapLine];
 }
 
 #pragma mark - BMKLocationServiceDelegate
@@ -123,36 +158,28 @@
         [_mapView selectAnnotation:_pointAnnotation animated:YES];
     }
 }
-/**
- *  设置运动轨迹地图路径
- */
-- (void)setMapLineWithLocation {
-//    if (userLocation.location == nil) {
-//        return;
-//    }
-//    /*
-//     horizontalAccuracy的单位是米，代表当前GPS信号精确到了多少米，越接近于0定位就越准确，GPS信号也就越强，当horizontalAccuracy为负数时，当前为没有GPS信号，所以一般情况下参考horizontalAccuracy就可以向用户展示当前的信号强度
-//     */
-//    // 突然大于15可能是GPS信号弱定位漂移了，忽略
-//    if (userLocation.location.horizontalAccuracy > 15) {
-//        return;
-//    }
-//
-//    if (_lineTempArray.count == 0) {
-//        [_lineTempArray addObject:userLocation.location];
-//        return;
-//    }
-//
-//    CLLocation *last = _lineTempArray.lastObject;
-//    CLLocationDistance distance = [userLocation.location distanceFromLocation:last];
-//    // 经纬度没变或者距离小于4
-//    if ((last.coordinate.longitude == userLocation.location.coordinate.longitude &&
-//         last.coordinate.latitude == userLocation.location.coordinate.latitude) ||
-//        (distance < 4 && _lineTempArray.count != 0)) {
-//        return;
-//    }
-//    [_lineTempArray addObject:userLocation.location];
-    
+
+// 将所有坐标连成一条路径以便进行区域大小判断
+- (BMKPolyline *)getMapLine {
+    NSMutableArray *totalArr = @[].mutableCopy;
+    for (int i = 0; i < _lineGroupArray.count; i ++) {
+        NSMutableArray *temp = _lineGroupArray[i];
+        for (CLLocation *location in temp) {
+            [totalArr addObject:location];
+        }
+    }
+    CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[totalArr.count];
+    for (int i = 0; i < totalArr.count; i++) {
+        CLLocation *loc = totalArr[i];
+        coords[i] = loc.coordinate;
+    }
+    BMKPolyline *polyLine = [BMKPolyline polylineWithCoordinates:coords count:totalArr.count];
+    [polyLine setPolylineWithCoordinates:coords count:totalArr.count];
+    return polyLine;
+}
+
+// 绘制路径
+- (void)setMapLine {
     for (int i = 0; i < _lineGroupArray.count; i ++) {
         NSMutableArray *temp = _lineGroupArray[i];
         

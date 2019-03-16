@@ -331,7 +331,10 @@
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
     resultVC.polylineArray = _polylineArray;
-    [self presentViewController:resultVC animated:YES completion:nil];
+    self.statusBarStyleRecord = UIStatusBarStyleLightContent;
+    [self presentViewController:resultVC animated:YES completion:^{
+        self.statusBarStyleRecord = UIStatusBarStyleDefault;
+    }];
 }
 
 #pragma mark - 转场动画
@@ -365,7 +368,7 @@
      3、基类里添加[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
      4、需要变颜色的类里单独改颜色。
      */
-    self.statusBarStyleRecord = [UIApplication sharedApplication].statusBarStyle;
+    self.statusBarStyleRecord = UIStatusBarStyleDefault;
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 }
 
@@ -379,6 +382,8 @@
 
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！
 - (void)dealloc {
+    _mapView.delegate = nil;
+    _locationService.delegate = nil;
     NSLog(@"run dealloc");
 }
 
