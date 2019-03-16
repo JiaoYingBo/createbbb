@@ -5,7 +5,7 @@
 //  Created by 焦英博 on 2019/3/10.
 //  Copyright © 2019 mlg. All rights reserved.
 //
-// 现在需要做顶部导航栏文字改变；暂停时的绘制逻辑和暂停多段数据存储x
+// 暂停时的绘制逻辑和暂停多段数据存储x
 
 #import "RunViewController.h"
 #import "RunResultController.h"
@@ -38,6 +38,7 @@
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
 // 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不可置nil
 @property (nonatomic, assign) BOOL isHideMode;
+@property (nonatomic, weak) RunNavView *navView;
 @property (nonatomic, weak) RunControlView *controlView;
 @property (nonatomic, strong) NSTimer *timer;
 // 是否开始跑步
@@ -46,7 +47,9 @@
 @end
 
 @implementation RunViewController {
-    NSMutableArray *lineArray;
+    NSMutableArray *_lineGroupArray;
+    NSMutableArray *_lineTempArray;
+    NSMutableArray *_polylineArray;
     CLLocationDistance _totalDistance;
 }
 
@@ -68,6 +71,10 @@
         self.modalPresentationStyle = UIModalPresentationCustom;
         _totalDistance = 0;
         _didStartRun = NO;
+        _lineTempArray = @[].mutableCopy;
+        _lineGroupArray = @[_lineTempArray].mutableCopy;
+        BMKPolyline *line = [[BMKPolyline alloc] init];
+        _polylineArray = @[line].mutableCopy;
     }
     return self;
 }
@@ -113,6 +120,7 @@
         weakSelf.isHideMode = YES;
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     };
+    self.navView = navView;
     
     RunControlView *controlView = [[RunControlView alloc] initWithFrame:CGRectMake(0, 64 + Map_Height, kScreenWidth, kScreenHeight - 64 - Map_Height)];
     controlView.delegate = self;
@@ -162,7 +170,7 @@
         NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
     } else {
         // 表示暂停跑步了
-        if (lineArray.count > 0) {
+        if (_lineGroupArray.count > 0) {
             [self updateControlViewWithBMKUserLocation:nil];
         }
     }
@@ -237,49 +245,75 @@
      */
     // 突然大于15可能是GPS信号弱定位漂移了，忽略
     if (userLocation.location.horizontalAccuracy > 15) {
-        NSLog(@">15，信号可能漂移，不稳定");
+        NSLog(@"%.f >15，信号可能漂移，不稳定",userLocation.location.horizontalAccuracy);
         return;
     }
     
-    if (lineArray == nil) {
-        lineArray = [NSMutableArray new];
+//    if (_lineArray == nil) {
+//        _lineArray = [NSMutableArray new];
+//        return;
+//    }
+    if (_lineTempArray.count == 0) {
+        [_lineTempArray addObject:userLocation.location];
         return;
     }
     
-    CLLocation *last = lineArray.lastObject;
+    CLLocation *last = _lineTempArray.lastObject;
     CLLocationDistance distance = [userLocation.location distanceFromLocation:last];
     // 经纬度没变或者距离小于4
     if ((last.coordinate.longitude == userLocation.location.coordinate.longitude &&
          last.coordinate.latitude == userLocation.location.coordinate.latitude) ||
-        (distance < 4 && lineArray.count != 0)) {
+        (distance < 4 && _lineTempArray.count != 0)) {
         // 此时不绘制路线，但要更新页面数据
         NSLog(@"不绘制路线，但刷新数据");
         [self updateControlViewWithBMKUserLocation:userLocation];
         return;
     }
-    [lineArray addObject:userLocation.location];
+    [_lineTempArray addObject:userLocation.location];
     
     // 更新ControlView上的数据
     _totalDistance += distance;
     NSLog(@"又绘制，又刷新");
     [self updateControlViewWithBMKUserLocation:userLocation];
     
-    CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[lineArray.count];
-    for (int i = 0; i < lineArray.count; i++) {
-        CLLocation *loc = lineArray[i];
-        coords[i] = loc.coordinate;
+    for (int i = 0; i < _lineGroupArray.count; i ++) {
+        NSMutableArray *temp = _lineGroupArray[i];
+        
+        CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[temp.count];
+        for (int i = 0; i < temp.count; i++) {
+            CLLocation *loc = temp[i];
+            coords[i] = loc.coordinate;
+        }
+        
+        if (temp.count <= 1) {
+            continue;
+        }
+        BMKPolyline *line = _polylineArray[i];
+        
+        if (![[_mapView overlays] containsObject:line]) {
+            line = [BMKPolyline polylineWithCoordinates:coords count:temp.count];
+            [_mapView addOverlay:line];
+        } else {
+            [line setPolylineWithCoordinates:coords count:temp.count];
+        }
     }
     
-    if (lineArray.count <= 1) {
-        return;
-    }
-    static BMKPolyline *line;
-    if (line == nil) {
-        line = [BMKPolyline polylineWithCoordinates:coords count:lineArray.count];
-        [_mapView addOverlay:line];
-    } else {
-        [line setPolylineWithCoordinates:coords count:lineArray.count];
-    }
+//    CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[_lineTempArray.count];
+//    for (int i = 0; i < _lineTempArray.count; i++) {
+//        CLLocation *loc = _lineTempArray[i];
+//        coords[i] = loc.coordinate;
+//    }
+//
+//    if (_lineTempArray.count <= 1) {
+//        return;
+//    }
+//    static BMKPolyline *line;
+//    if (line == nil) {
+//        line = [BMKPolyline polylineWithCoordinates:coords count:_lineTempArray.count];
+//        [_mapView addOverlay:line];
+//    } else {
+//        [line setPolylineWithCoordinates:coords count:_lineTempArray.count];
+//    }
 }
 // 已知体重、距离 跑步热量（kcal）＝体重（kg）×距离（公里）×1.036 例如：体重60公斤的人，长跑8公里，那么消耗的热量＝60×8×1.036＝497.28 kcal(千卡)
 - (void)updateControlViewWithBMKUserLocation:(BMKUserLocation *)userLocation {
@@ -310,19 +344,29 @@
         // 倒计时结束再开始计时和绘制路线
         [controlView timeStart];
         weakSelf.didStartRun = YES;
+        weakSelf.navView.titleLabel.text = @"跑步中";
     }];
 }
 
 - (void)runControlViewDidPause:(RunControlView *)controlView {
     self.didStartRun = NO;
+    self.navView.titleLabel.text = @"暂停跑步";
+    
+    _lineTempArray = @[].mutableCopy;
+    [_lineGroupArray addObject:_lineTempArray];
+    
+    BMKPolyline *line = [[BMKPolyline alloc] init];
+    [_polylineArray addObject:line];
 }
 
 - (void)runControlViewDidContinue:(RunControlView *)controlView {
     self.didStartRun = YES;
+    self.navView.titleLabel.text = @"跑步中";
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
     self.didStartRun = NO;
+    self.navView.titleLabel.text = @"跑步结束";
     [self.locationService stopUserLocationService];
     RunResultController *resultVC = [[RunResultController alloc] init];
     [self presentViewController:resultVC animated:YES completion:nil];
@@ -368,7 +412,7 @@
     [_mapView viewWillDisappear];
     _mapView.delegate = nil;
     _locationService.delegate = nil;
-    lineArray = nil;
+//    _lineArray = nil;
     
     [UIApplication sharedApplication].statusBarStyle = self.statusBarStyleRecord;
 }
@@ -376,7 +420,7 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     [_locationService stopUserLocationService];
-    [lineArray removeAllObjects];
+//    [_lineArray removeAllObjects];
     [_locationService startUserLocationService];
 }
 
