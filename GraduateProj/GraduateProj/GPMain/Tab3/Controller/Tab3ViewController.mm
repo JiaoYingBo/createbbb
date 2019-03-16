@@ -8,6 +8,7 @@
 
 #import "Tab3ViewController.h"
 #import "RunViewController.h"
+#import "RunListController.h"
 #import "RunButton.h"
 #import "MyAnnotation.h"
 #import "RunCountView.h"
@@ -19,6 +20,8 @@
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 #import "RunResultController.h"
+#import "RunFileUtil.h"
+#import "RunRecordModel.h"
 
 @interface Tab3ViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, RunCountViewDelegate, RunButtonDelegate>
 /** 百度地图 */
@@ -32,12 +35,16 @@
 @property (nonatomic, strong) RunButton *runBtn;
 @property (nonatomic, strong) RunViewController *runVC;
 
+@property (nonatomic, strong) NSArray *runRecordDatas;
+@property (nonatomic, assign) float totalMileage;
+
 @end
 
 @implementation Tab3ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self configDatas];
     [self bmkMapConfig];
     [self bmkServiceConfig];
     [self configUI];
@@ -49,12 +56,27 @@
     [_mapView viewWillAppear];
     _mapView.delegate = self;
     _locationService.delegate = self;
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
     _mapView.delegate = nil;
     _locationService.delegate = nil;
+    self.tabBarController.tabBar.hidden = YES;
+}
+
+- (void)configDatas {
+    self.runRecordDatas = @[];
+    self.runRecordDatas = [RunFileUtil getAllRecordFiles];
+    self.totalMileage = 0.00;
+    if (self.runRecordDatas.count > 0) {
+        for (int i = 0; i < self.runRecordDatas.count; i ++) {
+            NSData *data = self.runRecordDatas[i];
+            RunRecordModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            self.totalMileage = self.totalMileage + [model.dataArray[1] floatValue];
+        }
+    }
 }
 
 - (void)bmkMapConfig {
@@ -83,6 +105,8 @@
 - (void)configUI {
     self.countView = [[RunCountView alloc] initWithFrame:CGRectMake(10, 74, kScreenWidth-20, 120)];
     self.countView.delegate = self;
+    self.countView.countLabel.text = [NSString stringWithFormat:@"%td", self.runRecordDatas.count];
+    self.countView.mileageLabel.text = [NSString stringWithFormat:@"%.2f", self.totalMileage];
     [self.view addSubview:self.countView];
     
     self.runBtn = [[RunButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
@@ -125,9 +149,13 @@
 
 - (void)didClickedRunCountView:(RunCountView *)countView {
     NSLog(@"跳转跑步记录列表页面");
-    RunResultController *re = [RunResultController new];
-    re.dataArray = @[@"00:13:34", @"1.89", @"5.02", @"04'25''", @"79"];// 分别是：总计时间 全程距离 均速 配速 消耗大卡
-    [self presentViewController:re animated:YES completion:nil];
+    RunListController *list = [[RunListController alloc] init];
+    list.datas = self.runRecordDatas;
+    [self.navigationController pushViewController:list animated:YES];
+    
+//    RunResultController *re = [RunResultController new];
+//    re.dataArray = @[@"00:13:34", @"1.89", @"5.02", @"04'25''", @"79"];// 分别是：总计时间 全程距离 均速 配速 消耗大卡
+//    [self presentViewController:re animated:YES completion:nil];
 }
 
 - (void)focusLocationWithBMKUserLocation:(BMKUserLocation *)userLocation {

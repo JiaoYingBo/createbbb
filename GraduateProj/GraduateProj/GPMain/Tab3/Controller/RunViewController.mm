@@ -347,7 +347,7 @@
     RunResultController *resultVC = [[RunResultController alloc] init];
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
-    resultVC.polylineArray = _polylineArray;
+//    resultVC.polylineArray = _polylineArray;
     resultVC.dataArray = [self getDetailDatasWithDatas:data];
     self.statusBarStyleRecord = UIStatusBarStyleLightContent;
     [self presentViewController:resultVC animated:YES completion:^{

@@ -20,6 +20,13 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
++ (void)deleteAllRecordDatas {
+    NSInteger number = [[[NSUserDefaults standardUserDefaults] objectForKey:RunRecordLocalStorageNumber] integerValue];
+    for (NSInteger i = 0; i < number; i ++) {
+        [self deleteFileWithNumber:number];
+    }
+}
+
 + (void)deleteFileWithNumber:(NSInteger)number {
     NSString *path = [self filePathWithNumber:number];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -42,22 +49,15 @@
     NSString *path = [NSString stringWithFormat:@"Documents/RunRecordList%td.plist", number];
     return [NSHomeDirectory() stringByAppendingPathComponent:path];
 }
-//
-//+ (NSString *)draftPath {
-//    NSInteger number = [[[NSUserDefaults standardUserDefaults] objectForKey:RunRecordLocalStorageNumber] integerValue];
-//    NSString *path = [NSString stringWithFormat:@"Documents/RunRecordList%td.plist", number];
-//    number ++;
-//    [[NSUserDefaults standardUserDefaults] setInteger:number forKey:RunRecordLocalStorageNumber];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-//    return [NSHomeDirectory() stringByAppendingPathComponent:path];
-//}
 
 + (nullable NSArray<NSData *> *)getAllRecordFiles {
     NSInteger number = [[[NSUserDefaults standardUserDefaults] objectForKey:RunRecordLocalStorageNumber] integerValue];
     NSMutableArray *files = @[].mutableCopy;
     for (NSInteger i = 0; i < number; i ++) {
         NSData *data = [self getRecordDataWithNumber:i];
-        [files addObject:data];
+        if (data) {
+            [files addObject:data];
+        }
     }
     return files;
 }

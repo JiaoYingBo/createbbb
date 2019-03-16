@@ -112,7 +112,7 @@
     [self addSubview:self.mileageLabel];
     [self.mileageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.countLabel);
-        make.centerX.equalTo(mileageLab).offset(-5);
+        make.right.equalTo(mileageLab).offset(-3);
     }];
     
     UIView *line1 = [UIView new];

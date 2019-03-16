@@ -238,7 +238,8 @@
         if (temp.count <= 1) {
             continue;
         }
-        BMKPolyline *line = _polylineArray[i];
+//        BMKPolyline *line = _polylineArray[i];
+        BMKPolyline *line = [[BMKPolyline alloc] init];
         
         if (![[_mapView overlays] containsObject:line]) {
             line = [BMKPolyline polylineWithCoordinates:coords count:temp.count];

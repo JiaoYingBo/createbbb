@@ -7,8 +7,14 @@
 //
 
 #import "RunListController.h"
+#import "RunResultController.h"
+#import "RunFileUtil.h"
+#import "RunRecordModel.h"
+#import <BaiduMapAPI_Map/BMKPolyline.h>
 
-@interface RunListController ()
+@interface RunListController () <UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -16,17 +22,56 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [self configUI];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)configUI {
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
-*/
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if (!self.datas.count) {
+        cell.textLabel.text = @"还没有跑步记录，赶快去跑吧~";
+    } else {
+        NSString *str = [NSString stringWithFormat:@"这是第 %td 条记录", indexPath.row + 1];
+        cell.textLabel.text = str;
+    }
+    
+    return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.datas.count ? : 1;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (self.datas.count) {
+        NSData *data = self.datas[indexPath.row];
+        RunRecordModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        
+        RunResultController *resultVC = [[RunResultController alloc] init];
+        resultVC.lineGroupArray = model.lineGroupArray.mutableCopy;
+        resultVC.lineTempArray = model.lineTempArray.mutableCopy;
+        resultVC.dataArray = model.dataArray;
+        [self.navigationController pushViewController:resultVC animated:YES];
+    }
+}
+
+- (UITableView *)tableView {
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.rowHeight = 50;
+        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+    }
+    return _tableView;
+}
 
 @end

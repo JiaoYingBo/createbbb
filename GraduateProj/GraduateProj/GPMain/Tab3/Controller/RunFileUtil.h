@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)saveRecordData:(NSData *)data;
 + (nullable NSArray<NSData *> *)getAllRecordFiles;
++ (void)deleteAllRecordDatas;
++ (void)deleteFileWithNumber:(NSInteger)number;
 
 @end
 
