@@ -10,6 +10,9 @@
 #import "RunNavView.h"
 #import "ResultView.h"
 #import "MyAnnotation.h"
+#import "RunFileUtil.h"
+#import "RunRecordModel.h"
+#import <MBProgressHUD.h>
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
 #import <BaiduMapAPI_Map/BMKMapView.h>
@@ -29,6 +32,7 @@
 @property (nonatomic, strong) BMKPointAnnotation *endAnnotation;
 @property (nonatomic, strong) UIButton *saveBtn;
 @property (nonatomic, strong) ResultView *resultView;
+@property (nonatomic, strong) RunRecordModel *model;
 
 @end
 
@@ -39,6 +43,10 @@
     [self bmkMapConfig];
     [self bmkServiceConfig];
     [self configUI];
+    self.model = [[RunRecordModel alloc] init];
+    self.model.lineGroupArray = self.lineGroupArray;
+    self.model.lineTempArray = self.lineTempArray;
+    self.model.dataArray = self.dataArray;
 }
 
 - (void)bmkMapConfig {
@@ -54,16 +62,19 @@
     _mapView = mapView;
     [self.view addSubview:_mapView];
     
+    _startAnnotation = [[BMKPointAnnotation alloc] init];
+    _endAnnotation = [[BMKPointAnnotation alloc] init];
+    
     [self mapViewFitPolyLine:[self getMapLine]];
+    [self drawMapLine];
 }
 
 - (void)bmkServiceConfig {
-    BMKLocationService *locationService = [[BMKLocationService alloc] init];
-    locationService.delegate = self;
-//    [locationService startUserLocationService];
-    _locationService = locationService;
-    _startAnnotation = [[BMKPointAnnotation alloc] init];
-    _endAnnotation = [[BMKPointAnnotation alloc] init];
+//    BMKLocationService *locationService = [[BMKLocationService alloc] init];
+//    locationService.delegate = self;
+//    _locationService = locationService;
+//    _startAnnotation = [[BMKPointAnnotation alloc] init];
+//    _endAnnotation = [[BMKPointAnnotation alloc] init];
 }
 
 - (void)configUI {
@@ -138,6 +149,11 @@
     MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"ResultAnnotation"];
     if (annotationView == nil) {
         annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"ResultAnnotation"];
+        if (annotation == _startAnnotation) {
+            annotationView.type = MyAnnotationTypeGo;
+        } else if (annotation == _endAnnotation) {
+            annotationView.type = MyAnnotationTypeEnd;
+        }
     }
     return annotationView;
 }
@@ -154,13 +170,12 @@
 }
 
 - (void)mapViewDidFinishLoading:(BMKMapView *)mapView {
-//    [self mapViewFitPolyLine:[self getMapLine]];
-    [self drawMapLine];
+//    [self drawMapLine];
     [self setAnnotationWithStartLocation:[[self getAllLocation] firstObject] endLocation:[[self getAllLocation] lastObject]];
 }
 
-#pragma mark - BMKLocationServiceDelegate
-- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
+//#pragma mark - BMKLocationServiceDelegate
+//- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
     // 设置地图中心为用户经纬度
 //    [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
 //    _mapView.zoomLevel = 17;
@@ -168,7 +183,7 @@
 //    [self setAnnotationWithLocation:userLocation];
 //    // 绘制路线
 //    [self setMapLineWithLocation:userLocation];
-}
+//}
 
 /**
  *  设置大头针
@@ -177,13 +192,11 @@
     _startAnnotation.coordinate = start.coordinate;
     if (![_mapView.annotations containsObject:_startAnnotation]) {
         [_mapView addAnnotation:_startAnnotation];
-//        [_mapView selectAnnotation:_startAnnotation animated:YES];
     }
     
     _endAnnotation.coordinate = end.coordinate;
     if (![_mapView.annotations containsObject:_endAnnotation]) {
         [_mapView addAnnotation:_endAnnotation];
-//        [_mapView selectAnnotation:_endAnnotation animated:YES];
     }
 }
 
@@ -237,8 +250,18 @@
 }
 
 - (void)saveBtnClick {
-    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.model];
+    [RunFileUtil saveRecordData:data];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = @"保存成功！";
+    [hud hideAnimated:YES afterDelay:1];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
+    });
 }
 
 #pragma mark - 生命周期

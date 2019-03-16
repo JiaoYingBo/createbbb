@@ -68,4 +68,11 @@
     [IQKeyboardManager sharedManager].keyboardDistanceFromTextField = 50;
 }
 
+- (void)localStorageConfig {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:RunRecordLocalStorageNumber] == nil) {
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:RunRecordLocalStorageNumber];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 @end
