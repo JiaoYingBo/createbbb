@@ -17,6 +17,21 @@
     return self;
 }
 
+- (void)configWithDatas:(NSArray *)array {
+    int time = [array[0] intValue];
+    self.timeLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",time/3600,time/60,time%60];
+
+    double distance = [array[1] floatValue];
+    self.distanceLabel.text = [NSString stringWithFormat:@"%.2f", distance/1000];
+
+    double daka = [array[2] floatValue];
+    self.xiaohaoLabel.text = [NSString stringWithFormat:@"%.f", daka];
+
+    self.junsuLabel.text = [NSString stringWithFormat:@"%.2f", distance/1000/((float)time/3600)];
+    
+//    self.peisuLabel.text = [NSString stringWithFormat:@"%.f'%.f''", time/distance*60, time/distance*3600];
+}
+
 - (void)configUI {
     self.backgroundColor = [UIColor blackColor];
     
@@ -116,7 +131,7 @@
         make.centerX.equalTo(jsLab);
         make.top.equalTo(img.mas_bottom).offset(12);
     }];
-    self.junsuLabel = time;
+    self.junsuLabel = junsu;
     
     UILabel *psLab = [UILabel new];
     psLab.text = @"配速：分/公里";

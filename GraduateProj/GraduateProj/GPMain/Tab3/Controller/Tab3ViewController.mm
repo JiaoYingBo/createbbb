@@ -125,7 +125,9 @@
 
 - (void)didClickedRunCountView:(RunCountView *)countView {
     NSLog(@"跳转跑步记录列表页面");
-    [self presentViewController:[[RunResultController alloc] init] animated:YES completion:nil];
+    RunResultController *re = [RunResultController new];
+    re.dataArray = @[@(200), @(1000), @(60*1000/1000*1.036)];// 分别是：总时间 总距离 消耗大卡
+    [self presentViewController:re animated:YES completion:nil];
 }
 
 - (void)focusLocationWithBMKUserLocation:(BMKUserLocation *)userLocation {

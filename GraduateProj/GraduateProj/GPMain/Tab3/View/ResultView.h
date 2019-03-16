@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *peisuLabel;
 @property (nonatomic, strong) UILabel *xiaohaoLabel;
 
+// array分别是：总时间 总距离 消耗大卡
+- (void)configWithDatas:(NSArray *)array;
+
 @end
 
 NS_ASSUME_NONNULL_END

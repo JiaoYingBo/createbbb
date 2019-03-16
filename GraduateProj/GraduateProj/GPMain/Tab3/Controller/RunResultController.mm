@@ -79,6 +79,7 @@
     
     self.resultView = [[ResultView alloc] initWithFrame:CGRectMake(0, 320+64+20, 375, 170)];
     [self.view addSubview:self.resultView];
+    [self.resultView configWithDatas:self.dataArray];
     
     self.saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.saveBtn.layer.cornerRadius = 5*kScreen_W_Scale;

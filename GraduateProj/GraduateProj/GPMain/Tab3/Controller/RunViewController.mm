@@ -334,10 +334,12 @@
 //        return;
 //    }
     
+    NSArray *data = @[@(self.controlView.runDuration), @(_totalDistance), @(60*_totalDistance/1000*1.036)];
     RunResultController *resultVC = [[RunResultController alloc] init];
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
     resultVC.polylineArray = _polylineArray;
+    resultVC.dataArray = data;
     self.statusBarStyleRecord = UIStatusBarStyleLightContent;
     [self presentViewController:resultVC animated:YES completion:^{
         self.statusBarStyleRecord = UIStatusBarStyleDefault;

@@ -46,8 +46,20 @@
     
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
-    
+    [self getRequestWithURL:@"https://www.baidu.com" Session:^(NSDictionary *dic) {
+        NSLog(@"==>%@", dic);
+    }];
     return YES;
+}
+
+- (void)getRequestWithURL:(NSString *)urlString Session:(void(^)(NSDictionary *dic))block
+{
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    NSURLSessionDataTask *task = [session dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"%@\n%@\n%@", data,response,error);
+    }];
+    [task resume];
 }
 
 - (void)baiduMapConfig {
