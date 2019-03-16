@@ -7,17 +7,17 @@
 //
 
 #import "Tab3ViewController.h"
+#import "RunViewController.h"
+#import "RunButton.h"
+#import "MyAnnotation.h"
+#import "RunCountView.h"
+#import "TargetLockView.h"
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKMapView.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
 #import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
-#import "MyAnnotation.h"
-#import "RunCountView.h"
-#import "RunButton.h"
-#import "RunViewController.h"
-#import "TargetLockView.h"
 
 @interface Tab3ViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, RunCountViewDelegate, RunButtonDelegate>
 /** 百度地图 */
@@ -25,7 +25,7 @@
 /** 定位服务 */
 @property (nonatomic, strong) BMKLocationService *locationService;
 @property (nonatomic, assign) BMKUserLocation *userLocation;
-@property (nonatomic,strong) BMKPointAnnotation *pointAnnotation;
+@property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
 
 @property (nonatomic, strong) RunCountView *countView;
 @property (nonatomic, strong) RunButton *runBtn;

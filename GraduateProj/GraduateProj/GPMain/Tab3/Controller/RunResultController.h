@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RunResultController : GPBaseViewController
 
+@property (nonatomic, strong) NSMutableArray *lineGroupArray;
+@property (nonatomic, strong) NSMutableArray *lineTempArray;
+@property (nonatomic, strong) NSMutableArray *polylineArray;
+
 @property (nonatomic, copy) void(^dismissClick)(void);
 
 @end

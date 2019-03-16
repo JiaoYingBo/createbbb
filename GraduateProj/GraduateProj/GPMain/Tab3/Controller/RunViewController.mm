@@ -13,33 +13,30 @@
 #import "CountDownView.h"
 #import "RunControlView.h"
 #import "CircleSpreadTransition.h"
-#import <BaiduMapAPI_Base/BMKTypes.h>
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
 #import <BaiduMapAPI_Map/BMKMapView.h>
 #import <BaiduMapAPI_Map/BMKPolyline.h>
 #import <BaiduMapAPI_Map/BMKPolylineView.h>
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
-#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
-#import <BaiduMapAPI_Location/BMKLocationService.h>//引入定位功能所有的头文件
+#import <BaiduMapAPI_Location/BMKLocationService.h>
 
-#define Map_Height 230.f
+#define RunController_Map_Height 230.f
 
 @interface RunViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, UIViewControllerTransitioningDelegate, RunControlViewDelegate>
 
 /** 百度地图 */
-@property (nonatomic,weak)  BMKMapView *mapView;
+@property (nonatomic, weak)  BMKMapView *mapView;
 /** 定位服务 */
-@property (nonatomic,strong) BMKLocationService *locationService;
+@property (nonatomic, strong) BMKLocationService *locationService;
 /** 点 */
-@property (nonatomic,strong) BMKPointAnnotation *pointAnnotation;
+@property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
 // 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不可置nil
 @property (nonatomic, assign) BOOL isHideMode;
 @property (nonatomic, weak) RunNavView *navView;
 @property (nonatomic, weak) RunControlView *controlView;
-@property (nonatomic, strong) NSTimer *timer;
 // 是否开始跑步
 @property (nonatomic, assign) BOOL didStartRun;
 
@@ -86,7 +83,7 @@
 }
 
 - (void)bmkMapConfig {
-    BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, Map_Height)];
+    BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, RunController_Map_Height)];
     mapView.zoomLevel = 17;
     mapView.overlookEnabled = NO;
     mapView.rotateEnabled = NO;
@@ -123,7 +120,7 @@
     };
     self.navView = navView;
     
-    RunControlView *controlView = [[RunControlView alloc] initWithFrame:CGRectMake(0, 64 + Map_Height, kScreenWidth, kScreenHeight - 64 - Map_Height)];
+    RunControlView *controlView = [[RunControlView alloc] initWithFrame:CGRectMake(0, 64 + RunController_Map_Height, kScreenWidth, kScreenHeight - 64 - RunController_Map_Height)];
     controlView.delegate = self;
     [self.view addSubview:controlView];
     self.controlView = controlView;
@@ -331,6 +328,9 @@
     self.navView.titleLabel.text = @"跑步结束";
     [self.locationService stopUserLocationService];
     RunResultController *resultVC = [[RunResultController alloc] init];
+    resultVC.lineGroupArray = _lineGroupArray;
+    resultVC.lineTempArray = _lineTempArray;
+    resultVC.polylineArray = _polylineArray;
     [self presentViewController:resultVC animated:YES completion:nil];
 }
 
@@ -351,7 +351,6 @@
 }
 
 #pragma mark - 生命周期函数
-
 - (void)viewWillAppear:(BOOL)animated {
     [_mapView viewWillAppear];
     _mapView.delegate = self;
