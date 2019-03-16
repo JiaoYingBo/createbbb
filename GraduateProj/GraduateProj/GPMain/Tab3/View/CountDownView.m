@@ -80,7 +80,7 @@
         self.countLabel.text = [NSString stringWithFormat:@"%d", _count];
         _count --;
     } else if (_count == 0) {
-        self.countLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:130];
+        self.countLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:170];
         self.countLabel.text = @"GO";
         _count --;
     } else {

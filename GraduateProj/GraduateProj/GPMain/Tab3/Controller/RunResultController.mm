@@ -8,6 +8,7 @@
 
 #import "RunResultController.h"
 #import "RunNavView.h"
+#import "ResultView.h"
 #import "MyAnnotation.h"
 #import <BaiduMapAPI_Map/BMKCircle.h>
 #import <BaiduMapAPI_Map/BMKCircleView.h>
@@ -26,6 +27,8 @@
 @property (nonatomic, strong) BMKLocationService *locationService;
 /** 点 */
 @property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
+@property (nonatomic, strong) UIButton *saveBtn;
+@property (nonatomic, strong) ResultView *resultView;
 
 @end
 
@@ -39,7 +42,7 @@
 }
 
 - (void)bmkMapConfig {
-    BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, 250)];
+    BMKMapView *mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, 320)];
     mapView.zoomLevel = 17;
     mapView.overlookEnabled = NO;
     mapView.rotateEnabled = NO;
@@ -62,19 +65,36 @@
 }
 
 - (void)configUI {
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = kColor(51, 51, 68, 1);
     
     RunNavView *navView = [[RunNavView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 64)];
     navView.isResultModel = YES;
     [self.view addSubview:navView];
     __weak typeof(self)weakSelf = self;
     navView.leftBtnClick = ^{
-        // 点击“隐藏”按钮时设为YES
         [weakSelf.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
     };
     self.navView = navView;
     
+    self.resultView = [[ResultView alloc] initWithFrame:CGRectMake(0, 320+64+20, 375, 170)];
+    [self.view addSubview:self.resultView];
+    
+    self.saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.saveBtn.layer.cornerRadius = 5*kScreen_W_Scale;
+    self.saveBtn.layer.masksToBounds = YES;
+    self.saveBtn.backgroundColor = kColor(255, 124, 93, 1);
+    self.saveBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17*kScreen_W_Scale];
+    [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    [self.saveBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.saveBtn addTarget:self action:@selector(saveBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.saveBtn];
+    [self.saveBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(25);
+        make.right.equalTo(self.view).offset(-25);
+        make.bottom.equalTo(self.view).offset(-25);
+        make.height.mas_equalTo(40*kScreen_W_Scale);
+    }];
 }
 
 // 根据坐标路线显示合适的地图区域
@@ -202,6 +222,11 @@
             [line setPolylineWithCoordinates:coords count:temp.count];
         }
     }
+}
+
+- (void)saveBtnClick {
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
 }
 
 #pragma mark - 生命周期

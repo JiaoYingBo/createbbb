@@ -18,6 +18,7 @@
 #import <BaiduMapAPI_Map/BMKPinAnnotationView.h>
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
+#import "RunResultController.h"
 
 @interface Tab3ViewController ()<BMKMapViewDelegate, BMKLocationServiceDelegate, RunCountViewDelegate, RunButtonDelegate>
 /** 百度地图 */
@@ -124,6 +125,7 @@
 
 - (void)didClickedRunCountView:(RunCountView *)countView {
     NSLog(@"跳转跑步记录列表页面");
+    [self presentViewController:[[RunResultController alloc] init] animated:YES completion:nil];
 }
 
 - (void)focusLocationWithBMKUserLocation:(BMKUserLocation *)userLocation {
