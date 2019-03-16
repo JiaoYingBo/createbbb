@@ -8,11 +8,15 @@
 
 #import "RunNavView.h"
 
-@implementation RunNavView
+@implementation RunNavView {
+    UIButton *_left;
+    UIButton *_right;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self configUI];
+        _isResultModel = NO;
     }
     return self;
 }
@@ -40,6 +44,7 @@
         make.right.equalTo(self).offset(-20);
         make.width.height.mas_equalTo(21);
     }];
+    _right = rightBtn;
     
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     leftBtn.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -51,6 +56,16 @@
         make.left.equalTo(self).offset(18);
         make.centerY.equalTo(rightBtn);
     }];
+    _left = leftBtn;
+}
+
+- (void)setIsResultModel:(BOOL)isResultModel {
+    _isResultModel = isResultModel;
+    if (isResultModel) {
+        self.titleLabel.text = @"跑步结束";
+        _right.hidden = YES;
+        [_left setTitle:@"不保存" forState:UIControlStateNormal];
+    }
 }
 
 - (void)leftClick {

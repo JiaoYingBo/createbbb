@@ -201,7 +201,6 @@
                 [weakSelf.delegate runControlViewDidContinue:weakSelf];
             }
         } else {
-//            [weakSelf startTimer];
             if ([weakSelf.delegate respondsToSelector:@selector(runControlViewDidStart:)]) {
                 [weakSelf.delegate runControlViewDidStart:weakSelf];
             }
@@ -279,6 +278,7 @@
         [self.timer invalidate];
         self.timer = nil;
     }
+    self.runDuration = self.count;
     self.count = 0;
     self.timerIsPause = NO;
 }

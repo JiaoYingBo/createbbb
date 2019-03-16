@@ -327,6 +327,13 @@
     self.didStartRun = NO;
     self.navView.titleLabel.text = @"跑步结束";
     [self.locationService stopUserLocationService];
+    
+    // 小于100米或少于10秒时不记录
+//    if (_totalDistance < 100 || self.controlView.runDuration < 10) {
+//        [self notifyAlert];
+//        return;
+//    }
+    
     RunResultController *resultVC = [[RunResultController alloc] init];
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
@@ -335,6 +342,16 @@
     [self presentViewController:resultVC animated:YES completion:^{
         self.statusBarStyleRecord = UIStatusBarStyleDefault;
     }];
+}
+
+- (void)notifyAlert {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"距离过短无法保存" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
+    }];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - 转场动画

@@ -65,6 +65,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     RunNavView *navView = [[RunNavView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 64)];
+    navView.isResultModel = YES;
     [self.view addSubview:navView];
     __weak typeof(self)weakSelf = self;
     navView.leftBtnClick = ^{

@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, copy) void(^leftBtnClick)(void);
 
+@property (nonatomic, assign) BOOL isResultModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *endBtn;
 // GPS信号强度（准确度）0:无效 1:弱 2:强 3:超强
 @property (nonatomic, assign) NSInteger GPSStrength;
+// 跑步时长
+@property (nonatomic, assign) int runDuration;
 
 @property (nonatomic, weak) id<RunControlViewDelegate> delegate;
 
