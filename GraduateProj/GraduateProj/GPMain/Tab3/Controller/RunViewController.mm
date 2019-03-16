@@ -148,23 +148,29 @@
 
 #pragma mark - BMKLocationServiceDelegate
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
-    // 设置地图中心为用户经纬度
-    [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
-    _mapView.zoomLevel = 17;
-    // 设置大头针
-    [self setAnnotationWithLocation:userLocation];
-    // 绘制路线
-    if (self.didStartRun) {
-        [self setMapLineWithLocation:userLocation];
-        NSLog(@"速度：%.f m/s  %.fkm/h", userLocation.location.speed, userLocation.location.speed*3.6);
+    if (!self.isHideMode) {
+        // 设置地图中心为用户经纬度
+        [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+        _mapView.zoomLevel = 17;
+        // 设置大头针
+        [self setAnnotationWithLocation:userLocation];
+        // 绘制路线
+        if (self.didStartRun) {
+            [self setMapLineWithLocation:userLocation];
+        } else {
+            // 表示暂停跑步了
+            if (_lineGroupArray.count > 0) {
+                [self updateControlViewWithBMKUserLocation:nil];
+            }
+        }
+        // 更新GPS信号
+        [self updateGPSWithLocation:userLocation];
     } else {
-        // 表示暂停跑步了
-        if (_lineGroupArray.count > 0) {
-            [self updateControlViewWithBMKUserLocation:nil];
+        if (self.didStartRun) {
+            // 这里只更新数据
+            [self setMapLineWithLocation:userLocation];
         }
     }
-    // 更新GPS信号
-    [self updateGPSWithLocation:userLocation];
 }
 
 - (void)updateGPSWithLocation:(BMKUserLocation*)userLocation {
@@ -248,28 +254,31 @@
     
     // 更新ControlView上的数据
     _totalDistance += distance;
-    NSLog(@"又绘制，又刷新");
-    [self updateControlViewWithBMKUserLocation:userLocation];
     
-    for (int i = 0; i < _lineGroupArray.count; i ++) {
-        NSMutableArray *temp = _lineGroupArray[i];
+    if (!self.isHideMode) {
+        NSLog(@"又绘制，又刷新");
+        [self updateControlViewWithBMKUserLocation:userLocation];
         
-        CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[temp.count];
-        for (int i = 0; i < temp.count; i++) {
-            CLLocation *loc = temp[i];
-            coords[i] = loc.coordinate;
-        }
-        
-        if (temp.count <= 1) {
-            continue;
-        }
-        BMKPolyline *line = _polylineArray[i];
-        
-        if (![[_mapView overlays] containsObject:line]) {
-            line = [BMKPolyline polylineWithCoordinates:coords count:temp.count];
-            [_mapView addOverlay:line];
-        } else {
-            [line setPolylineWithCoordinates:coords count:temp.count];
+        for (int i = 0; i < _lineGroupArray.count; i ++) {
+            NSMutableArray *temp = _lineGroupArray[i];
+            
+            CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[temp.count];
+            for (int i = 0; i < temp.count; i++) {
+                CLLocation *loc = temp[i];
+                coords[i] = loc.coordinate;
+            }
+            
+            if (temp.count <= 1) {
+                continue;
+            }
+            BMKPolyline *line = _polylineArray[i];
+            
+            if (![[_mapView overlays] containsObject:line]) {
+                line = [BMKPolyline polylineWithCoordinates:coords count:temp.count];
+                [_mapView addOverlay:line];
+            } else {
+                [line setPolylineWithCoordinates:coords count:temp.count];
+            }
         }
     }
 }
@@ -339,11 +348,33 @@
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
     resultVC.polylineArray = _polylineArray;
-    resultVC.dataArray = data;
+    resultVC.dataArray = [self getDetailDatasWithDatas:data];
     self.statusBarStyleRecord = UIStatusBarStyleLightContent;
     [self presentViewController:resultVC animated:YES completion:^{
         self.statusBarStyleRecord = UIStatusBarStyleDefault;
     }];
+}
+
+// 分别是：总计时间 全程距离 均速 配速 消耗大卡
+- (NSArray *)getDetailDatasWithDatas:(NSArray *)array {
+    int time = [array[0] intValue];
+    NSString *timeString = [NSString stringWithFormat:@"%02d:%02d:%02d",time/3600,time/60,time%60];
+    
+    double distance = [array[1] floatValue];
+    NSString *distanceString = [NSString stringWithFormat:@"%.2f", distance/1000];
+    
+    NSString *junsuString = [NSString stringWithFormat:@"%.2f", distance/1000/((float)time/3600)];
+    
+    float fTime = (float)time;
+    float minute = fTime/60/(distance/1000);
+    int minuteInt = floorf(minute);
+    int secondInt = (int)((minute - minuteInt) * 60);
+    NSString *peisuString = [NSString stringWithFormat:@"%02d'%02d''", minuteInt, secondInt];
+    
+    double daka = [array[2] floatValue];
+    NSString *dakaString = [NSString stringWithFormat:@"%.f", daka];
+    
+    return @[timeString, distanceString, junsuString, peisuString, dakaString];
 }
 
 - (void)notifyAlert {
@@ -393,7 +424,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
-//    _mapView.delegate = nil;
+    _mapView.delegate = nil;
 //    _locationService.delegate = nil;
     
     [UIApplication sharedApplication].statusBarStyle = self.statusBarStyleRecord;

@@ -126,7 +126,7 @@
 - (void)didClickedRunCountView:(RunCountView *)countView {
     NSLog(@"跳转跑步记录列表页面");
     RunResultController *re = [RunResultController new];
-    re.dataArray = @[@(200), @(1000), @(60*1000/1000*1.036)];// 分别是：总时间 总距离 消耗大卡
+    re.dataArray = @[@"00:13:34", @"1.89", @"5.02", @"04'25''", @"79"];// 分别是：总计时间 全程距离 均速 配速 消耗大卡
     [self presentViewController:re animated:YES completion:nil];
 }
 

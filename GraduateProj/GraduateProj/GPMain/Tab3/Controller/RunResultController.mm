@@ -25,8 +25,8 @@
 @property (nonatomic, weak) RunNavView *navView;
 @property (nonatomic, weak)  BMKMapView *mapView;
 @property (nonatomic, strong) BMKLocationService *locationService;
-/** 点 */
-@property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
+@property (nonatomic, strong) BMKPointAnnotation *startAnnotation;
+@property (nonatomic, strong) BMKPointAnnotation *endAnnotation;
 @property (nonatomic, strong) UIButton *saveBtn;
 @property (nonatomic, strong) ResultView *resultView;
 
@@ -53,6 +53,8 @@
     mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView = mapView;
     [self.view addSubview:_mapView];
+    
+    [self mapViewFitPolyLine:[self getMapLine]];
 }
 
 - (void)bmkServiceConfig {
@@ -60,8 +62,8 @@
     locationService.delegate = self;
 //    [locationService startUserLocationService];
     _locationService = locationService;
-    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
-    _pointAnnotation = point;
+    _startAnnotation = [[BMKPointAnnotation alloc] init];
+    _endAnnotation = [[BMKPointAnnotation alloc] init];
 }
 
 - (void)configUI {
@@ -133,9 +135,9 @@
 
 #pragma mark - BMKMapViewDelegate
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
-    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"RunAnnotation"];
+    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"ResultAnnotation"];
     if (annotationView == nil) {
-        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"RunAnnotation"];
+        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"ResultAnnotation"];
     }
     return annotationView;
 }
@@ -152,8 +154,9 @@
 }
 
 - (void)mapViewDidFinishLoading:(BMKMapView *)mapView {
-    [self mapViewFitPolyLine:[self getMapLine]];
-    [self setMapLine];
+//    [self mapViewFitPolyLine:[self getMapLine]];
+    [self drawMapLine];
+    [self setAnnotationWithStartLocation:[[self getAllLocation] firstObject] endLocation:[[self getAllLocation] lastObject]];
 }
 
 #pragma mark - BMKLocationServiceDelegate
@@ -168,28 +171,25 @@
 }
 
 /**
- *  设置地图的标注
+ *  设置大头针
  */
-- (void)setAnnotationWithLocation:(BMKUserLocation*)userLocation {
-    if (userLocation.location == nil) {
-        return;
+- (void)setAnnotationWithStartLocation:(CLLocation*)start endLocation:(CLLocation*)end {
+    _startAnnotation.coordinate = start.coordinate;
+    if (![_mapView.annotations containsObject:_startAnnotation]) {
+        [_mapView addAnnotation:_startAnnotation];
+//        [_mapView selectAnnotation:_startAnnotation animated:YES];
     }
-    _pointAnnotation.coordinate = userLocation.location.coordinate;
-    if (![_mapView.annotations containsObject:_pointAnnotation]) {
-        [_mapView addAnnotation:_pointAnnotation];
-        [_mapView selectAnnotation:_pointAnnotation animated:YES];
+    
+    _endAnnotation.coordinate = end.coordinate;
+    if (![_mapView.annotations containsObject:_endAnnotation]) {
+        [_mapView addAnnotation:_endAnnotation];
+//        [_mapView selectAnnotation:_endAnnotation animated:YES];
     }
 }
 
 // 将所有坐标连成一条路径以便进行区域大小判断
 - (BMKPolyline *)getMapLine {
-    NSMutableArray *totalArr = @[].mutableCopy;
-    for (int i = 0; i < _lineGroupArray.count; i ++) {
-        NSMutableArray *temp = _lineGroupArray[i];
-        for (CLLocation *location in temp) {
-            [totalArr addObject:location];
-        }
-    }
+    NSArray *totalArr = [self getAllLocation];
     CLLocationCoordinate2D *coords = new CLLocationCoordinate2D[totalArr.count];
     for (int i = 0; i < totalArr.count; i++) {
         CLLocation *loc = totalArr[i];
@@ -200,8 +200,19 @@
     return polyLine;
 }
 
+- (NSArray *)getAllLocation {
+    NSMutableArray *totalArr = @[].mutableCopy;
+    for (int i = 0; i < _lineGroupArray.count; i ++) {
+        NSMutableArray *temp = _lineGroupArray[i];
+        for (CLLocation *location in temp) {
+            [totalArr addObject:location];
+        }
+    }
+    return totalArr.copy;
+}
+
 // 绘制路径
-- (void)setMapLine {
+- (void)drawMapLine {
     for (int i = 0; i < _lineGroupArray.count; i ++) {
         NSMutableArray *temp = _lineGroupArray[i];
         

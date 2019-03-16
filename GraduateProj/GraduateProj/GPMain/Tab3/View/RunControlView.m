@@ -59,7 +59,7 @@
     [self addSubview:distance];
     [distance mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(distanceLab).offset(10);
-        make.centerX.equalTo(self);
+        make.right.equalTo(distanceLab.mas_left).offset(-7);
     }];
     self.distanceLabel = distance;
     
