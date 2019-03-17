@@ -42,11 +42,13 @@
     if (type == MyAnnotationTypeGo) {
         self.bgImage.image = [UIImage imageNamed:@"start"];
         self.bgImage.frame = CGRectMake(0, 0, 20, 20);
-        self.bgView.hidden = YES;
+        self.bgView.frame = CGRectMake(3, 3, 13, 13);
+        self.bgView.layer.cornerRadius = 5;
     } else if (type == MyAnnotationTypeEnd) {
         self.bgImage.image = [UIImage imageNamed:@"end"];
         self.bgImage.frame = CGRectMake(0, 0, 20, 20);
-        self.bgView.hidden = YES;
+        self.bgView.frame = CGRectMake(3, 3, 13, 13);
+        self.bgView.layer.cornerRadius = 5;
     } else {
         self.bgImage.image = [UIImage imageNamed:@"circleyuanquan"];
         self.bgImage.frame = CGRectMake(0, 0, 15, 15);

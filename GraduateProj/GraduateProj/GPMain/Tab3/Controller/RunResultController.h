@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *lineTempArray;
 // 分别是：总计时间 全程距离 均速 配速 消耗大卡
 @property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, copy) NSString *startRunTime;
+
+// 是历史记录页面还是跑步结束页面，默认NO（跑步结束）
+@property (nonatomic, assign) BOOL isRecordModel;
 
 @property (nonatomic, copy) void(^dismissClick)(void);
 

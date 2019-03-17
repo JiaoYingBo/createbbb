@@ -33,10 +33,11 @@
 /** 点 */
 @property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
-// 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不可置nil
-@property (nonatomic, assign) BOOL isHideMode;
 @property (nonatomic, weak) RunNavView *navView;
 @property (nonatomic, weak) RunControlView *controlView;
+@property (nonatomic, copy) NSString *startTime;
+// 是否点击了“隐藏”处于隐藏状态，隐藏状态下该控制器不可置nil
+@property (nonatomic, assign) BOOL isHideMode;
 // 是否开始跑步
 @property (nonatomic, assign) BOOL didStartRun;
 
@@ -336,6 +337,7 @@
     self.didStartRun = NO;
     self.navView.titleLabel.text = @"跑步结束";
     [self.locationService stopUserLocationService];
+    self.startTime = [self getCurrentTime];
     
     // 小于100米或少于10秒时不记录
 //    if (_totalDistance < 100 || self.controlView.runDuration < 10) {
@@ -349,6 +351,7 @@
     resultVC.lineTempArray = _lineTempArray;
 //    resultVC.polylineArray = _polylineArray;
     resultVC.dataArray = [self getDetailDatasWithDatas:data];
+    resultVC.startRunTime = self.startTime;
     self.statusBarStyleRecord = UIStatusBarStyleLightContent;
     [self presentViewController:resultVC animated:YES completion:^{
         self.statusBarStyleRecord = UIStatusBarStyleDefault;
@@ -385,6 +388,16 @@
     }];
     [alert addAction:okAction];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+//获取当前的时间
+- (NSString *)getCurrentTime{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSDate *datenow = [NSDate date];
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    NSString *strToMinute = [currentTimeString substringToIndex:16];
+    return strToMinute;
 }
 
 #pragma mark - 转场动画
@@ -424,6 +437,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
+    // 为了让页面隐藏时也定位，就不置service为nil了
+    // 而mapview不置nil容易出现绘制bug而崩溃
     _mapView.delegate = nil;
 //    _locationService.delegate = nil;
     

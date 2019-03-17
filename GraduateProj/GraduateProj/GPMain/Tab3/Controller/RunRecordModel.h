@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray *lineTempArray;
 // 分别是：总计时间 全程距离 均速 配速 消耗大卡
 @property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, copy) NSString *startRunDate;
 
 @end
 

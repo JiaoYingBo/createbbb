@@ -86,7 +86,7 @@
     }];
     
     self.countLabel = [UILabel new];
-    self.countLabel.text = @"12";
+    self.countLabel.text = @"0";
     self.countLabel.textColor = kColor(21, 144, 252, 1);
     self.countLabel.font = [UIFont boldSystemFontOfSize:34];
     [self addSubview:self.countLabel];
@@ -106,7 +106,7 @@
     }];
     
     self.mileageLabel = [UILabel new];
-    self.mileageLabel.text = @"24.6";
+    self.mileageLabel.text = @"0.00";
     self.mileageLabel.textColor = kColor(21, 144, 252, 1);
     self.mileageLabel.font = [UIFont boldSystemFontOfSize:34];
     [self addSubview:self.mileageLabel];

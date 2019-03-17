@@ -26,6 +26,8 @@
 }
 
 - (void)configUI {
+    self.navigationItem.title = @"跑步记录";
+    
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
@@ -58,7 +60,10 @@
         resultVC.lineGroupArray = model.lineGroupArray.mutableCopy;
         resultVC.lineTempArray = model.lineTempArray.mutableCopy;
         resultVC.dataArray = model.dataArray;
-        [self.navigationController pushViewController:resultVC animated:YES];
+        resultVC.startRunTime = model.startRunDate;
+        resultVC.isRecordModel = YES;
+        [self presentViewController:resultVC animated:YES completion:nil];
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     }
 }
 

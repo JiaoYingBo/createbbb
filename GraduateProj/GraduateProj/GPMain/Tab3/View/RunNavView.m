@@ -16,7 +16,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self configUI];
-        _isResultModel = NO;
+        _type = RunNavViewTypeNormal;
     }
     return self;
 }
@@ -59,12 +59,22 @@
     _left = leftBtn;
 }
 
-- (void)setIsResultModel:(BOOL)isResultModel {
-    _isResultModel = isResultModel;
-    if (isResultModel) {
+-(void)setType:(RunNavViewType)type {
+    _type = type;
+    if (type == RunNavViewTypeNormal) {
+        self.titleLabel.text = @"开始跑步";
+        _right.hidden = NO;
+        _left.hidden = NO;
+        [_left setTitle:@"隐藏" forState:UIControlStateNormal];
+    } else if (type == RunNavViewTypeRunEnd) {
         self.titleLabel.text = @"跑步结束";
         _right.hidden = YES;
+        _left.hidden = NO;
         [_left setTitle:@"不保存" forState:UIControlStateNormal];
+    } else if (type == RunNavViewTypeRecord) {
+        self.titleLabel.text = @"跑步记录";
+        _right.hidden = YES;
+        _left.hidden = YES;
     }
 }
 

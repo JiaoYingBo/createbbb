@@ -38,6 +38,13 @@
 
 @implementation RunResultController
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.isRecordModel = NO;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self bmkMapConfig];
@@ -47,6 +54,7 @@
     self.model.lineGroupArray = self.lineGroupArray;
     self.model.lineTempArray = self.lineTempArray;
     self.model.dataArray = self.dataArray;
+    self.model.startRunDate = self.startRunTime;
 }
 
 - (void)bmkMapConfig {
@@ -61,6 +69,17 @@
     mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView = mapView;
     [self.view addSubview:_mapView];
+    
+    // 移除百度地图logo
+    for (UIView *view in mapView.subviews) {
+        for (UIImageView *imageView in view.subviews) {
+            static int a = 0;
+            a ++;
+            if (a == 4) {
+                [imageView removeFromSuperview];
+            }
+        }
+    }
     
     _startAnnotation = [[BMKPointAnnotation alloc] init];
     _endAnnotation = [[BMKPointAnnotation alloc] init];
@@ -81,7 +100,12 @@
     self.view.backgroundColor = kColor(51, 51, 68, 1);
     
     RunNavView *navView = [[RunNavView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 64)];
-    navView.isResultModel = YES;
+    if (self.isRecordModel) {
+        navView.type = RunNavViewTypeRecord;
+        navView.titleLabel.text = self.startRunTime;
+    } else {
+        navView.type = RunNavViewTypeRunEnd;
+    }
     [self.view addSubview:navView];
     __weak typeof(self)weakSelf = self;
     navView.leftBtnClick = ^{
@@ -99,7 +123,11 @@
     self.saveBtn.layer.masksToBounds = YES;
     self.saveBtn.backgroundColor = kColor(255, 124, 93, 1);
     self.saveBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17*kScreen_W_Scale];
-    [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    if (self.isRecordModel) {
+        [self.saveBtn setTitle:@"关闭" forState:UIControlStateNormal];
+    } else {
+        [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    }
     [self.saveBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.saveBtn addTarget:self action:@selector(saveBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.saveBtn];
@@ -108,6 +136,53 @@
         make.right.equalTo(self.view).offset(-25);
         make.bottom.equalTo(self.view).offset(-25);
         make.height.mas_equalTo(40*kScreen_W_Scale);
+    }];
+    
+    if (!self.isRecordModel) {
+        [self configEndTimeUI];
+    }
+}
+
+- (void)configEndTimeUI {
+    UIView *endView = [UIView new];
+    endView.layer.cornerRadius = 10;
+    endView.backgroundColor = [UIColor darkGrayColor];
+    [self.view addSubview:endView];
+    [endView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-8);
+        make.bottom.equalTo(self.resultView.mas_top).offset(-22);
+        make.width.mas_equalTo(170);
+        make.height.mas_equalTo(20);
+    }];
+    
+    UIView *touView = [UIView new];
+    touView.layer.cornerRadius = 6;
+    touView.backgroundColor = kColor(255, 124, 93, 1);
+    [endView addSubview:touView];
+    [touView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(endView).offset(6);
+        make.centerY.equalTo(endView);
+        make.width.mas_equalTo(40);
+        make.height.mas_equalTo(12);
+    }];
+    
+    UILabel *endLab = [UILabel new];
+    endLab.text = @"End";
+    endLab.textColor = [UIColor whiteColor];
+    endLab.font = [UIFont fontWithName:@"Baskerville-BoldItalic" size:13];
+    [touView addSubview:endLab];
+    [endLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(touView);
+    }];
+    
+    UILabel *timeLab = [UILabel new];
+    timeLab.text = @"2019-03-17 07:28";
+    timeLab.textColor = [UIColor whiteColor];
+    timeLab.font = [UIFont systemFontOfSize:13];
+    [endView addSubview:timeLab];
+    [timeLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(endView);
+        make.right.equalTo(endView).offset(-10);
     }];
 }
 
@@ -251,18 +326,31 @@
 }
 
 - (void)saveBtnClick {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.model];
-    [RunFileUtil saveRecordData:data];
-    
+    if (self.isRecordModel) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    } else {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.model];
+        [RunFileUtil saveRecordData:data];
+        
+        [self showDownHud];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
+        });
+    }
+}
+
+- (void)showDownHud {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.label.text = @"保存成功！";
-    [hud hideAnimated:YES afterDelay:1];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];
-    });
+    hud.contentColor = kColor(240, 90, 20, 1);
+    hud.mode = MBProgressHUDModeCustomView;
+    UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    hud.customView = [[UIImageView alloc] initWithImage:image];
+    hud.square = YES;
+    hud.label.text = @"保存完成!";
+    [hud hideAnimated:YES afterDelay:1.f];
 }
 
 #pragma mark - 生命周期

@@ -44,7 +44,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configDatas];
     [self bmkMapConfig];
     [self bmkServiceConfig];
     [self configUI];
@@ -56,14 +55,13 @@
     [_mapView viewWillAppear];
     _mapView.delegate = self;
     _locationService.delegate = self;
-    self.tabBarController.tabBar.hidden = NO;
+    [self configDatas];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [_mapView viewWillDisappear];
     _mapView.delegate = nil;
     _locationService.delegate = nil;
-    self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)configDatas {
@@ -77,6 +75,8 @@
             self.totalMileage = self.totalMileage + [model.dataArray[1] floatValue];
         }
     }
+    self.countView.countLabel.text = [NSString stringWithFormat:@"%td", self.runRecordDatas.count];
+    self.countView.mileageLabel.text = [NSString stringWithFormat:@"%.2f", self.totalMileage];
 }
 
 - (void)bmkMapConfig {
@@ -105,8 +105,6 @@
 - (void)configUI {
     self.countView = [[RunCountView alloc] initWithFrame:CGRectMake(10, 74, kScreenWidth-20, 120)];
     self.countView.delegate = self;
-    self.countView.countLabel.text = [NSString stringWithFormat:@"%td", self.runRecordDatas.count];
-    self.countView.mileageLabel.text = [NSString stringWithFormat:@"%.2f", self.totalMileage];
     [self.view addSubview:self.countView];
     
     self.runBtn = [[RunButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
@@ -140,6 +138,7 @@
 - (void)runVCEndStateObserve {
     self.runVC = nil;
     self.runBtn.isRunning = NO;
+    [self configDatas];
 }
 
 #pragma mark - 点击代理
@@ -151,7 +150,9 @@
     NSLog(@"跳转跑步记录列表页面");
     RunListController *list = [[RunListController alloc] init];
     list.datas = self.runRecordDatas;
+    self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:list animated:YES];
+    self.hidesBottomBarWhenPushed = NO;
     
 //    RunResultController *re = [RunResultController new];
 //    re.dataArray = @[@"00:13:34", @"1.89", @"5.02", @"04'25''", @"79"];// 分别是：总计时间 全程距离 均速 配速 消耗大卡
