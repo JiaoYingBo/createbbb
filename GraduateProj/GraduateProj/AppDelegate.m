@@ -75,4 +75,12 @@
     }
 }
 
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    NSLog(@"APP 后台了");
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    NSLog(@"APP 要前台了");
+}
+
 @end

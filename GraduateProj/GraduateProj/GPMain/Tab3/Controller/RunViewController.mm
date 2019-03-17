@@ -81,6 +81,8 @@
     [self bmkMapConfig];
     [self bmkServiceConfig];
     [self configUI];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AppEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AppEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)bmkMapConfig {
@@ -96,6 +98,8 @@
     _mapView = mapView;
     [self.view addSubview:_mapView];
     
+    // 自定义大头针(局部变量时)必须在viewwillappear里初始化，否则会显示失败
+    // 这里只有一个大头针，就不那么麻烦了，直接定义全局变量
     BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
     _pointAnnotation = point;
 }
@@ -203,10 +207,10 @@
     }
     // 方向度数，0为正北方
 //    double dir = userLocation.location.course;
+    
     _pointAnnotation.coordinate = userLocation.location.coordinate;
     if (![_mapView.annotations containsObject:_pointAnnotation]) {
         [_mapView addAnnotation:_pointAnnotation];
-        [_mapView selectAnnotation:_pointAnnotation animated:YES];
     }
     
     //设置方向角度
@@ -239,7 +243,7 @@
     
     CLLocation *last = _lineTempArray.lastObject;
     CLLocationDistance distance = [userLocation.location distanceFromLocation:last];
-    // 经纬度没变或者距离小于4
+    // 经纬度没变或者距离小于4，定位频率大约是每秒一次，正常成年人步行速度大约4米每秒
     if ((last.coordinate.longitude == userLocation.location.coordinate.longitude &&
          last.coordinate.latitude == userLocation.location.coordinate.latitude) ||
         (distance < 4 && _lineTempArray.count != 0)) {
@@ -267,16 +271,22 @@
             }
             
             if (temp.count <= 1) {
+                free(coords);
                 continue;
             }
             BMKPolyline *line = _polylineArray[i];
             
             if (![[_mapView overlays] containsObject:line]) {
+                // 这里每次都新建了，所以从不走下边的else
                 line = [BMKPolyline polylineWithCoordinates:coords count:temp.count];
                 [_mapView addOverlay:line];
+                [_polylineArray replaceObjectAtIndex:i withObject:line];
+                NSLog(@"新线绘制");
             } else {
                 [line setPolylineWithCoordinates:coords count:temp.count];
+                NSLog(@"老线刷新");
             }
+            free(coords);
         }
     }
 }
@@ -339,10 +349,10 @@
     self.startTime = [self getCurrentTime];
     
     // 小于100米或少于10秒时不记录
-//    if (_totalDistance < 100 || self.controlView.runDuration < 10) {
-//        [self notifyAlert];
-//        return;
-//    }
+    if (_totalDistance < 100 || self.controlView.runDuration < 10) {
+        [self notifyAlert];
+        return;
+    }
     
     NSArray *data = @[@(self.controlView.runDuration), @(_totalDistance), @(60*_totalDistance/1000*1.036)];
     RunResultController *resultVC = [[RunResultController alloc] init];
@@ -443,10 +453,19 @@
     [UIApplication sharedApplication].statusBarStyle = self.statusBarStyleRecord;
 }
 
+- (void)AppEnterBackground {
+    self.isHideMode = YES;
+}
+
+- (void)AppEnterForeground {
+    self.isHideMode = NO;
+}
+
 #pragma mark - 内存泄漏!!!!!!!!!!!!!!!!! 应该是地图或者服务，注意查清！！！
 - (void)dealloc {
     _mapView.delegate = nil;
     _locationService.delegate = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"run dealloc");
 }
 
