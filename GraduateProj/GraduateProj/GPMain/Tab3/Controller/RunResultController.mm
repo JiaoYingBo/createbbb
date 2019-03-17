@@ -72,11 +72,9 @@
     
     // 移除百度地图logo
     for (UIView *view in mapView.subviews) {
-        for (UIImageView *imageView in view.subviews) {
-            static int a = 0;
-            a ++;
-            if (a == 4) {
-                [imageView removeFromSuperview];
+        for (UIView *inView in view.subviews) {
+            if ([inView isKindOfClass:[UIImageView class]]) {
+                inView.hidden = YES;
             }
         }
     }

@@ -30,7 +30,7 @@
 @property (nonatomic, weak)  BMKMapView *mapView;
 /** 定位服务 */
 @property (nonatomic, strong) BMKLocationService *locationService;
-/** 点 */
+/** 大头针 */
 @property (nonatomic, strong) BMKPointAnnotation *pointAnnotation;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleRecord;
 @property (nonatomic, weak) RunNavView *navView;
@@ -349,7 +349,6 @@
     RunResultController *resultVC = [[RunResultController alloc] init];
     resultVC.lineGroupArray = _lineGroupArray;
     resultVC.lineTempArray = _lineTempArray;
-//    resultVC.polylineArray = _polylineArray;
     resultVC.dataArray = [self getDetailDatasWithDatas:data];
     resultVC.startRunTime = self.startTime;
     self.statusBarStyleRecord = UIStatusBarStyleLightContent;
