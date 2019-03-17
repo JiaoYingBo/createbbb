@@ -95,6 +95,9 @@
     mapView.userTrackingMode = BMKUserTrackingModeNone;
     _mapView = mapView;
     [self.view addSubview:_mapView];
+    
+    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
+    _pointAnnotation = point;
 }
 
 - (void)bmkServiceConfig {
@@ -104,8 +107,6 @@
     locationService.allowsBackgroundLocationUpdates = YES;
     [locationService startUserLocationService];
     _locationService = locationService;
-    BMKPointAnnotation *point = [[BMKPointAnnotation alloc] init];
-    _pointAnnotation = point;
 }
 
 - (void)configUI {
@@ -129,9 +130,9 @@
 
 #pragma mark - BMKMapViewDelegate
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation {
-    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"RunAnnotation"];
+    MyAnnotation *annotationView = (MyAnnotation*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"GPRunAnnotation"];
     if (annotationView == nil) {
-        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"RunAnnotation"];
+        annotationView = [[MyAnnotation alloc] initWithAnnotation:annotation reuseIdentifier:@"GPRunAnnotation"];
     }
     return annotationView;
 }
@@ -141,7 +142,7 @@
         BMKPolylineView *overlayView = [[BMKPolylineView alloc] initWithOverlay:overlay];
         overlayView.lineWidth = 3;
         overlayView.isFocus = NO;
-        overlayView.strokeColor = [UIColor colorWithRed:0.167 green:0.840 blue:0.043 alpha:1];
+        overlayView.strokeColor = kColor(27, 252, 1, 1);
         return overlayView;
     }
     return nil;
@@ -202,10 +203,6 @@
     }
     // 方向度数，0为正北方
 //    double dir = userLocation.location.course;
-    // 单位m/s
-//    CLLocationSpeed speed = userLocation.location.speed;
-//    _pointAnnotation.title = [NSString stringWithFormat:@"我(精确度:%.0f m)",userLocation.location.horizontalAccuracy];
-//    _pointAnnotation.subtitle = [NSString stringWithFormat:@"时速:%0.1fKm/h",(speed<0? 0:speed) * 3.6f];
     _pointAnnotation.coordinate = userLocation.location.coordinate;
     if (![_mapView.annotations containsObject:_pointAnnotation]) {
         [_mapView addAnnotation:_pointAnnotation];
@@ -320,6 +317,7 @@
 - (void)runControlViewDidPause:(RunControlView *)controlView {
     self.didStartRun = NO;
     self.navView.titleLabel.text = @"暂停跑步";
+    [self.locationService stopUserLocationService];
     
     _lineTempArray = @[].mutableCopy;
     [_lineGroupArray addObject:_lineTempArray];
@@ -331,6 +329,7 @@
 - (void)runControlViewDidContinue:(RunControlView *)controlView {
     self.didStartRun = YES;
     self.navView.titleLabel.text = @"跑步中";
+    [self.locationService startUserLocationService];
 }
 
 - (void)runControlViewDidEnd:(RunControlView *)controlView {
