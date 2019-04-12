@@ -53,7 +53,7 @@
 
 - (void)baiduMapConfig {
     _mapManager = [[BMKMapManager alloc] init];
-    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数 
     BOOL ret = [_mapManager start:@"QI9I59nAodGr1CPtuvj2kBarkVctUG8o"  generalDelegate:nil];
     if (!ret) {
         NSLog(@"BauduMap manager start failed!");
