@@ -24,7 +24,7 @@
     [super viewDidLoad];
     [self configUI];
     [self setLeftNavItemToBack];
-}
+} 
 
 - (void)configUI {
     self.navigationItem.title = @"跑步记录";

@@ -15,6 +15,8 @@
 #import <MBProgressHUD.h>
 #import <MapKit/MapKit.h>
 
+#import "CrumbPathRender.h"
+
 @interface RunResultController ()<MKMapViewDelegate>
 
 @property (nonatomic, strong) MKMapView *mkMap;
@@ -50,7 +52,7 @@
 - (void)configMapView {
     self.mkMap = [[MKMapView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, 320)];
     self.mkMap.mapType = MKMapTypeStandard;
-    self.mkMap.zoomEnabled = NO;
+//    self.mkMap.zoomEnabled = NO;
     self.mkMap.delegate = self;
     [self.view addSubview:self.mkMap];
     
@@ -58,7 +60,8 @@
     _endAnnotation = [[MKPointAnnotation alloc] init];
     
     [self mapViewFitsPolyLine:[self getMapLine]];
-    [self drawMapLine];
+//    [self drawMapLine];
+    [self drawLine];
     [self setAnnotationWithStartLocation:[[self getAllLocation] firstObject] endLocation:[[self getAllLocation] lastObject]];
 }
 
@@ -203,11 +206,23 @@
 }
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
-    if ([overlay isKindOfClass:[MKPolyline class]]) {
-        MKPolylineRenderer *line = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
-        line.strokeColor = kColor(27, 252, 1, 1);
-        line.lineWidth = 3.f;
-        return line;
+    // 单色路径
+//    if ([overlay isKindOfClass:[MKPolyline class]]) {
+//        MKPolylineRenderer *line = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
+//        line.strokeColor = kColor(27, 252, 1, 1);
+//        line.lineWidth = 3.f;
+//        return line;
+//    }
+//    return nil;
+    
+    // 多段彩色路径
+    if ([overlay isKindOfClass:[CrumbPathOverlay class]]) {
+        MKOverlayRenderer *render = [mapView rendererForOverlay:overlay];
+        if(!render) {
+            render = [[CrumbPathRender alloc] initWithOverlay:overlay];
+        }
+        return render;
+        
     }
     return nil;
 }
@@ -248,6 +263,28 @@
     return totalArr.copy;
 }
 
+- (void)drawLine {
+    NSArray *totalArr = [self getAllLocation];
+    CLLocation *loc = totalArr[0];
+    CrumbPathOverlay *overlay = [[CrumbPathOverlay alloc] initWithOrigin:CrumbPointMake(loc.coordinate,0)];
+    [_mkMap addOverlay:overlay];
+    
+    for (int i = 0; i < totalArr.count; i ++) {
+        if (i > 0) {
+            CLLocation *location = totalArr[i];
+            // hue范围0-1，数值越大越红，越小越绿
+            static float hue = 0.6;
+            [overlay addCoordinate:CrumbPointMake(location.coordinate, hue)];
+            if (i%10 == 0) {
+                hue = hue + 0.05;
+            }
+            if (hue > 0.85) {
+                hue = 0.3;
+            }
+        }
+    }
+}
+
 // 绘制路径
 - (void)drawMapLine {
     for (int i = 0; i < _lineGroupArray.count; i ++) {
@@ -281,9 +318,9 @@
     } else {
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.model];
         [RunFileUtil saveRecordData:data];
-        
+
         [self showDownHud];
-        
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"RunControllerDidEndRun" object:nil];

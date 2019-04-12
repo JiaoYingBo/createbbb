@@ -14,6 +14,8 @@
 		0E2D344321A40F7000255543 /* AddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343B21A40F7000255543 /* AddressModel.m */; };
 		0E2D344421A40F7000255543 /* MOFSAddressPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D343E21A40F7000255543 /* MOFSAddressPickerView.m */; };
 		0E3E0DB7225DBA310076DF2C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E3E0DB6225DBA310076DF2C /* MapKit.framework */; };
+		0E3E0DCA22606A050076DF2C /* CrumbPathRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E3E0DC722606A050076DF2C /* CrumbPathRender.m */; };
+		0E3E0DCB22606A050076DF2C /* CrumbPathOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E3E0DC822606A050076DF2C /* CrumbPathOverlay.m */; };
 		0E47D0DD219FEAB800DF82F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E47D0DC219FEAB800DF82F0 /* AppDelegate.m */; };
 		0E47D0E3219FEAB800DF82F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E47D0E1219FEAB800DF82F0 /* Main.storyboard */; };
 		0E47D0E5219FEAB800DF82F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E47D0E4219FEAB800DF82F0 /* Assets.xcassets */; };
@@ -166,6 +168,10 @@
 		0E2D343D21A40F7000255543 /* MOFSDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOFSDatePicker.h; sourceTree = "<group>"; };
 		0E2D343E21A40F7000255543 /* MOFSAddressPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MOFSAddressPickerView.m; sourceTree = "<group>"; };
 		0E3E0DB6225DBA310076DF2C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		0E3E0DC422606A050076DF2C /* CrumbPathRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrumbPathRender.h; sourceTree = "<group>"; };
+		0E3E0DC522606A050076DF2C /* CrumbPathOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrumbPathOverlay.h; sourceTree = "<group>"; };
+		0E3E0DC722606A050076DF2C /* CrumbPathRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrumbPathRender.m; sourceTree = "<group>"; };
+		0E3E0DC822606A050076DF2C /* CrumbPathOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrumbPathOverlay.m; sourceTree = "<group>"; };
 		0E47D0D8219FEAB800DF82F0 /* GraduateProj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraduateProj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E47D0DB219FEAB800DF82F0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0E47D0DC219FEAB800DF82F0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -494,6 +500,17 @@
 			path = MOFSPickerManager;
 			sourceTree = "<group>";
 		};
+		0E3E0DC222606A050076DF2C /* CrumbPathOverlay */ = {
+			isa = PBXGroup;
+			children = (
+				0E3E0DC522606A050076DF2C /* CrumbPathOverlay.h */,
+				0E3E0DC822606A050076DF2C /* CrumbPathOverlay.m */,
+				0E3E0DC422606A050076DF2C /* CrumbPathRender.h */,
+				0E3E0DC722606A050076DF2C /* CrumbPathRender.m */,
+			);
+			path = CrumbPathOverlay;
+			sourceTree = "<group>";
+		};
 		0E47D0CF219FEAB800DF82F0 = {
 			isa = PBXGroup;
 			children = (
@@ -645,6 +662,7 @@
 		0E47D108219FECBF00DF82F0 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				0E3E0DC222606A050076DF2C /* CrumbPathOverlay */,
 				0E47D109219FECBF00DF82F0 /* Tab3ViewController.h */,
 				0E47D10A219FECBF00DF82F0 /* Tab3ViewController.mm */,
 				0EE7553B223F33D500909D0D /* RunListController.h */,
@@ -1351,6 +1369,7 @@
 				0EE7555D223F340E00909D0D /* RunNavView.m in Sources */,
 				69D86C1221C8D893005C66B3 /* CePingCell.m in Sources */,
 				690484BF21E597E60013B903 /* TestRecordVC.m in Sources */,
+				0E3E0DCA22606A050076DF2C /* CrumbPathRender.m in Sources */,
 				693A9B2021E6E245006D19A5 /* showCell.m in Sources */,
 				69117EAF21AFCC66009D0702 /* TAPageControl.m in Sources */,
 				0E47D116219FECBF00DF82F0 /* Tab3ViewController.mm in Sources */,
@@ -1406,6 +1425,7 @@
 				6917FB5A21AC0A7000E85F05 /* JHRadarChart.m in Sources */,
 				691909A0222E4DE2008B98D9 /* PPSticker.m in Sources */,
 				0EE75556223F340E00909D0D /* RunCountView.m in Sources */,
+				0E3E0DCB22606A050076DF2C /* CrumbPathOverlay.m in Sources */,
 				0EE7552B223F314200909D0D /* AcivityViewController.m in Sources */,
 				6917FB5621AC0A7000E85F05 /* JHLineChart.m in Sources */,
 				691EC93721AEAD1F00DF1ED8 /* DVPieChartTeacher.m in Sources */,
